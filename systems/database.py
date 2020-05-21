@@ -1,25 +1,42 @@
-import psycopg2
+import subprocess
+import os
 
-try:
-    connection = psycopg2.connect(user = "postgres",
-                                  password = "UPG6qFAxJ8VPkQIfiRDf",
-                                  host = "ows-frontier.chjdqlnmmy9n.eu-central-1.rds.amazonaws.com",
-                                  port = "5432",
-                                  database = "ows_db")
 
-    cursor = connection.cursor()
-    # Print PostgreSQL Connection properties
-    print(connection.get_dsn_parameters())
+def backup_table(table_name):
+    with open("backups/{}-bkp.dmp".format(table_name), "wb") as file:
+        subprocess.run(
+            args=[
+                "pg_dump",
+                "-h",
+                "ows-frontier.chjdqlnmmy9n.eu-central-1.rds.amazonaws.com",
+                "-U",
+                "postgres",
+                "-d",
+                "ows_db",
+                "-t", table_name,
+                "-a",
+                "-Fc"
+            ],
+            stdout=file
+        )
 
-    # Print PostgreSQL version
-    cursor.execute("SELECT version();")
-    record = cursor.fetchone()
-    print("You are connected to - ", record,"\n")
 
-except (Exception, psycopg2.Error) as error :
-    print("Error while connecting to PostgreSQL" + error)
-finally:
-    if(connection):
-        cursor.close()
-        connection.close()
-        print("PostgreSQL connection is closed")
+# pg_dump -h ows-frontier.chjdqlnmmy9n.eu-central-1.rds.amazonaws.com -U postgres -d ows_db -t fqdn_frontiers -a -f fqdn_frontiers-bkp.sql
+
+
+def restore_table(table_name):
+    with open("backups/{}-bkp.dmp".format(table_name), "r") as file:
+        subprocess.run(
+            args=[
+                "pg_restore",
+                "-h",
+                "ows-frontier.chjdqlnmmy9n.eu-central-1.rds.amazonaws.com",
+                "-U",
+                "postgres",
+                "-d",
+                "ows_db",
+                "-t",
+                table_name,
+            ],
+            stdin=file
+        )

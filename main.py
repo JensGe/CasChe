@@ -43,6 +43,7 @@ def main():
         database.restore_table("url_frontiers")
 
         print("* Set Fetcher Settings ...")
+        print("* Case {}".format(setting))
         websch.set_fetcher_settings(setting)
 
         print("* Create EC2 Instance ...")
@@ -52,8 +53,8 @@ def main():
         file_found = False
         print("* Waiting for Log-File in S3 Bucket ...")
         while not file_found:
-            print("*", end="")
-            sleep(60)
+            print("-", end="")
+            sleep(10)
             file_found = aws.download_file(file_name)
 
         print("* Terminate EC2 Instance ...")

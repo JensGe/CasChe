@@ -4,7 +4,7 @@ ec2 = boto3.client("ec2")
 s3 = boto3.client("s3")
 
 s3_bucket = "fetsim-logs"
-bkp_folder = "backups"
+logs_folder = s3_bucket
 
 
 def create_instance():
@@ -31,7 +31,7 @@ def download_file(file_name):
             s3.download_file(
                 s3_bucket,
                 "{}/{}".format(s3_bucket, file_name),
-                bkp_folder + "/" + file_name,
+                logs_folder + "/" + file_name,
             )
             return True
 

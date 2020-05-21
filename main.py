@@ -24,29 +24,39 @@ case_settings = pyd.CaseSettings(
 
 
 def main():
+    print("Reset Example DB ...")
     websch.delete_example_db()
     websch.generate_example_db(**example_db_settings)
 
+    print("Backup FQDN- & URL-Frontier Tables ...")
     database.backup_table("fqdn_frontiers")
     database.backup_table("url_frontiers")
 
+    print("Compute Cases ...")
     settings_collection = compute.create_cases(case_settings)
+    print("Cases created: {}".format(len(settings_collection)))
 
     for setting in settings_collection:
+        print("* Reset Example DB ...")
         websch.delete_example_db()
         database.restore_table("fqdn_frontiers")
         database.restore_table("url_frontiers")
+
+        print("* Set Fetcher Settings ...")
         websch.set_fetcher_settings(setting)
 
+        print("* Create EC2 Instance ...")
         instance_id = aws.create_instance()
         file_name = instance_id + ".log"
 
         file_found = False
+        print("* Waiting for Log-File in S3 Bucket ...")
         while not file_found:
             print("*", end="")
             sleep(60)
             file_found = aws.download_file(file_name)
 
+        print("* Terminate EC2 Instance ...")
         aws.terminate_instance(instance_id)
 
 

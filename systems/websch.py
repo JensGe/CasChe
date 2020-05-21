@@ -1,6 +1,8 @@
 import requests
+from common import pyd_models as pyd
 
 websch_database = "http://ec2-18-185-96-23.eu-central-1.compute.amazonaws.com/database/"
+websch_settings = "http://ec2-18-185-96-23.eu-central-1.compute.amazonaws.com/settings/"
 
 
 def delete_example_db():
@@ -34,4 +36,12 @@ def generate_example_db(
             "visited_ratio": visited_ratio,
             "connection_amount": connection_amount,
         },
+    )
+
+
+def set_fetcher_settings(settings):
+    # current_setting = pyd.FetcherSettings(**settings)
+    requests.patch(
+        websch_settings,
+        json=settings,
     )

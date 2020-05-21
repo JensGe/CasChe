@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from common import enum
+from typing import List
 
 
 class ExampleDBSettings(BaseModel):
@@ -33,4 +34,23 @@ class FetcherSettings(BaseModel):
     new_vs_existing_threshold: float = 0.35
 
 
+class CaseSettings(BaseModel):
+    logging_mode: List[int] = None
+    crawling_speed_factor: List[float] = None
+    default_crawl_delay: List[int] = None
+    parallel_process: List[int] = None
+
+    iterations: List[int] = None
+    fqdn_amount: List[int] = None
+    url_amount: List[int] = None
+
+    long_term_mode: List[enum.LTF] = None
+    short_term_mode: List[enum.STF] = None
+
+    min_links_per_page: List[int] = None  # Check Literature
+    max_links_per_page: List[int] = None
+    lpp_distribution_type: List[enum.LPPDISTR] = None
+
+    internal_vs_external_threshold: List[float] = None
+    new_vs_existing_threshold: List[float] = None
 

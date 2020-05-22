@@ -1,8 +1,9 @@
 import requests
-from common import pyd_models as pyd
+from time import sleep
 
 websch_database = "http://ec2-18-185-96-23.eu-central-1.compute.amazonaws.com/database/"
 websch_settings = "http://ec2-18-185-96-23.eu-central-1.compute.amazonaws.com/settings/"
+websch_stats = "http://ec2-18-185-96-23.eu-central-1.compute.amazonaws.com/stats/"
 
 
 def delete_example_db():
@@ -39,9 +40,22 @@ def generate_example_db(
     )
 
 
+def wait_for_example_db(settings):
+    done = False
+    while not done:
+        sleep(30)
+        example_db = requests.get(websch_stats).json()
+
+        fqdn_reached = example_db["frontier_amount"] == settings["fqdn_amount"]
+        url_reached = example_db["url_amount"] > (
+            (settings["min_url_amount"] + settings["max_url_amount"]) / 1.9
+        )
+
+        if fqdn_reached and url_reached:
+            done = True
+
+
 def set_fetcher_settings(settings):
-    # current_setting = pyd.FetcherSettings(**settings)
     requests.patch(
-        websch_settings,
-        json=settings,
+        websch_settings, json=settings,
     )

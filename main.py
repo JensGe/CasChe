@@ -11,7 +11,8 @@ example_db_settings = dict(
     connection_amount=None
     )
 
-repetition = 10
+repetition = 1
+
 
 case_settings = pyd.CaseSettings(
     logging_mode=None,
@@ -21,7 +22,7 @@ case_settings = pyd.CaseSettings(
     iterations=[1],
     fqdn_amount=[10],
     url_amount=None,
-    long_term_mode=[enum.LTF.large_sites_first, enum.LTF.small_sites_first],
+    long_term_mode=[enum.LTF.large_sites_first],
     short_term_mode=None,
     min_links_per_page=[2],
     max_links_per_page=[2],
@@ -36,6 +37,7 @@ def main():
     websch.delete_example_db()
     websch.generate_example_db(**example_db_settings)
 
+    websch.wait_for_example_db(example_db_settings)
     print("Backup FQDN- & URL-Frontier Tables ...")
     database.backup_table("fqdn_frontiers")
     database.backup_table("url_frontiers")
@@ -70,7 +72,6 @@ def main():
 
     with open("fetsim-logs/results.json", "w") as file:
         json.dump(compute.jsonify_results(), file)
-
 
 
 if __name__ == "__main__":

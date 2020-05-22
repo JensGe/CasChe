@@ -9,7 +9,7 @@ logs_folder = "fetsim-logs"
 
 def create_instance():
     response = ec2.run_instances(
-        LaunchTemplate={"LaunchTemplateId": "lt-0344130210c1eaca5", "Version": "4",},
+        LaunchTemplate={"LaunchTemplateId": "lt-0344130210c1eaca5", "Version": "5"},
         MinCount=1,
         MaxCount=1,
     )
@@ -21,9 +21,7 @@ def terminate_instance(instance_id):
 
 
 def download_file(file_name):
-    print("** Searching for File: {}".format(file_name))
     files = s3.list_objects_v2(Bucket=s3_bucket)
-    print("** Log List: {}".format(files))
 
     if files["KeyCount"] == 0:
         print("*** Log List empty")
@@ -31,7 +29,7 @@ def download_file(file_name):
 
     for file in files["Contents"]:
         bucket_file_name = s3_bucket + "/" + file_name
-        print("*** File['Key']= {}".format(file["Key"]))
+        # print("*** File['Key']= {}".format(file["Key"]))
 
         if file["Key"] == bucket_file_name:
             s3.download_file(

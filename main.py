@@ -1,22 +1,30 @@
 from systems import websch, database, compute, aws
 from common import enum, pyd_models as pyd
 from time import sleep
+import json
 
+example_db_settings = dict(
+    fqdn_amount=1000,
+    min_url_amount=5,
+    max_url_amount=5,
+    visited_ratio=None,
+    connection_amount=None
+    )
 
-example_db_settings = dict(fqdn_amount=30, min_url_amount=5, max_url_amount=5)
+repetition = 10
 
 case_settings = pyd.CaseSettings(
     logging_mode=None,
     crawling_speed_factor=None,
     default_crawl_delay=None,
-    parallel_process=[1, 2],
+    parallel_process=[1, 2, 4, 8, 16, 32, 64],
     iterations=[1],
-    fqdn_amount=[5],
+    fqdn_amount=[10],
     url_amount=None,
-    long_term_mode=[enum.LTF.large_sites_first],
+    long_term_mode=[enum.LTF.large_sites_first, enum.LTF.small_sites_first],
     short_term_mode=None,
-    min_links_per_page=[1],
-    max_links_per_page=[1],
+    min_links_per_page=[2],
+    max_links_per_page=[2],
     lpp_distribution_type=None,
     internal_vs_external_threshold=[1.0],
     new_vs_existing_threshold=[1.0],
@@ -33,7 +41,7 @@ def main():
     database.backup_table("url_frontiers")
 
     print("Compute Cases ...")
-    settings_collection = compute.create_cases(case_settings)
+    settings_collection = compute.create_cases(case_settings, repetition)
     print("Cases created: {}".format(len(settings_collection)))
 
     for setting in settings_collection:
@@ -51,28 +59,18 @@ def main():
         file_name = instance_id + ".log"
 
         file_found = False
-        print("* Waiting for Log-File in S3 Bucket ...")
+        print("* Waiting for {}.log-File in S3 Bucket ...".format(instance_id))
         while not file_found:
             print("-", end="")
-            sleep(10)
+            sleep(30)
             file_found = aws.download_file(file_name)
 
         print("* Terminate EC2 Instance ...")
         aws.terminate_instance(instance_id)
 
+    with open("fetsim-logs/results.json", "w") as file:
+        json.dump(compute.jsonify_results(), file)
 
-# ToDo
-# [x] create db_example
-#     [x] reset (request WebSch)
-#     [x] generate example db
-# [x] backup db_example
-# [x] create all cases (FetcherSettings)
-# [ ] for each FetcherSetting:
-#     [x] restore db_example
-#     [x] set current FetcherSetting
-#     [x] reboot / create FetSim Instance
-#     [x] download Log from S3 and name corresponding to FetcherSettings
-# [ ] parse results
 
 
 if __name__ == "__main__":

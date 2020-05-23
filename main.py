@@ -1,31 +1,27 @@
 from systems import websch, database, compute, aws
 from common import enum, pyd_models as pyd
 from time import sleep
-import json
 
 example_db_settings = dict(
     fqdn_amount=1000,
     min_url_amount=5,
     max_url_amount=5,
-    visited_ratio=None,
-    connection_amount=None
     )
 
 repetition = 1
 
-
 case_settings = pyd.CaseSettings(
     logging_mode=None,
-    crawling_speed_factor=None,
-    default_crawl_delay=None,
-    parallel_process=[1, 2, 4, 8, 16, 32, 64],
+    crawling_speed_factor=[10],
+    default_crawl_delay=[10],
+    parallel_process=[4, 8, 32],
     iterations=[1],
-    fqdn_amount=[10],
+    fqdn_amount=None,
     url_amount=None,
-    long_term_mode=[enum.LTF.large_sites_first],
-    short_term_mode=None,
-    min_links_per_page=[2],
-    max_links_per_page=[2],
+    long_term_mode=[enum.LTF.large_sites_first, enum.LTF.small_sites_first],
+    short_term_mode=[enum.STF.new_pages_first, enum.STF.old_pages_first],
+    min_links_per_page=[1],
+    max_links_per_page=[1],
     lpp_distribution_type=None,
     internal_vs_external_threshold=[1.0],
     new_vs_existing_threshold=[1.0],
@@ -70,8 +66,8 @@ def main():
         print("* Terminate EC2 Instance ...")
         aws.terminate_instance(instance_id)
 
-    with open("fetsim-logs/results.json", "w") as file:
-        json.dump(compute.jsonify_results(), file)
+    compute.write_json_file()
+    compute.write_csv_file()
 
 
 if __name__ == "__main__":

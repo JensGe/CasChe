@@ -42,17 +42,29 @@ def generate_example_db(
 
 def wait_for_example_db(settings):
     done = False
+    first_run = True
     while not done:
-        sleep(30)
+        if first_run:
+            sleep(5)
+            first_run = False
+        else:
+            sleep(30)
+
         example_db = requests.get(websch_stats).json()
 
         fqdn_reached = example_db["frontier_amount"] == settings["fqdn_amount"]
-        url_reached = example_db["url_amount"] > (
-            (settings["min_url_amount"] + settings["max_url_amount"]) / 1.9
-        )
+
+        url_th = (settings["min_url_amount"] + settings["max_url_amount"]) / 2.05
+        url_reached = example_db["url_amount"] >= url_th
 
         if fqdn_reached and url_reached:
+            print(
+                "** Threshold {} reached: url_amount={}".format(
+                    url_th, example_db["url_amount"]
+                )
+            )
             done = True
+
 
 
 def set_fetcher_settings(settings):

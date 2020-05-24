@@ -1,5 +1,6 @@
 from itertools import product
 import os, json, csv
+import shutil
 
 
 def create_cases(case_settings, repetition: int = 1):
@@ -36,6 +37,15 @@ def get_iteration_results(row):
     return data_dict
 
 
+def get_stats_results(row):
+    data_string = row[row.find("Stats:") + 7 :]
+    data_list = data_string.split(", ")
+    for i in range(len(data_list)):
+        data_list[i] = data_list[i].split(" ")
+    data_dict = {k[0][:-1]: int(k[1]) for k in data_list}
+    return data_dict
+
+
 def jsonify_results():
     results = list()
     for subdir, dirs, files in os.walk("fetsim-logs"):
@@ -46,8 +56,14 @@ def jsonify_results():
                         fetcher_settings = get_fetcher_settings(row)
                     if "Iteration Stats" in row:
                         iteration_stats = get_iteration_results(row)
+                    if "DB Stats" in row:
+                        db_stats = get_stats_results(row)
             results.append(
-                dict(fetcher_settings=fetcher_settings, iteration_stats=iteration_stats)
+                dict(
+                    fetcher_settings=fetcher_settings,
+                    iteration_stats=iteration_stats,
+                    db_stats=db_stats,
+                )
             )
     return results
 
@@ -78,6 +94,8 @@ def write_csv_file():
             "fetch",
             "fetch_cpu",
             "submit",
+            "frontier_amount",
+            "url_amount",
         ]
 
         writer = csv.DictWriter(csv_file, fieldnames=field_names, delimiter=";")
@@ -86,5 +104,20 @@ def write_csv_file():
         results = jsonify_results()
 
         for run in results:
-            writer.writerow({**run["fetcher_settings"], **run["iteration_stats"]})
+            writer.writerow(
+                {**run["fetcher_settings"], **run["iteration_stats"], **run["db_stats"]}
+            )
+
+
+def archive_project(filename):
+    file_iter = 1
+    org_filename = filename
+    while os.path.isfile("finished_results/{}.zip".format(filename)):
+        file_iter += 1
+        filename = org_filename + "_" + str(file_iter)
+
+    shutil.make_archive("finished_results/{}".format(filename), "zip", "fetsim-logs")
+    shutil.rmtree("fetsim-logs")
+
+
 

@@ -1,6 +1,7 @@
 from systems import websch, database, compute, aws
 from common import enum, pyd_models as pyd
 from time import sleep
+from datetime import datetime
 
 example_db_settings = dict(
     fqdn_amount=1000,
@@ -8,18 +9,19 @@ example_db_settings = dict(
     max_url_amount=5,
     )
 
+project_naming = "{}_paralleltest_1-64".format(datetime.now().strftime("%Y-%m-%d"))
 repetition = 1
 
 case_settings = pyd.CaseSettings(
     logging_mode=None,
     crawling_speed_factor=[10],
     default_crawl_delay=[10],
-    parallel_process=[4, 8, 32],
+    parallel_process=[1, 8, 64],
     iterations=[1],
-    fqdn_amount=None,
+    fqdn_amount=[1000],
     url_amount=None,
-    long_term_mode=[enum.LTF.large_sites_first, enum.LTF.small_sites_first],
-    short_term_mode=[enum.STF.new_pages_first, enum.STF.old_pages_first],
+    long_term_mode=[enum.LTF.large_sites_first],
+    short_term_mode=[enum.STF.new_pages_first],
     min_links_per_page=[1],
     max_links_per_page=[1],
     lpp_distribution_type=None,
@@ -42,15 +44,16 @@ def main():
     settings_collection = compute.create_cases(case_settings, repetition)
     print("Cases created: {}".format(len(settings_collection)))
 
-    for setting in settings_collection:
+    for i in range(len(settings_collection)):
+    # for setting in settings_collection:
         print("* Reset Example DB ...")
         websch.delete_example_db()
         database.restore_table("fqdn_frontiers")
         database.restore_table("url_frontiers")
 
         print("* Set Fetcher Settings ...")
-        print("* Case {}".format(setting))
-        websch.set_fetcher_settings(setting)
+        print("* Case {}".format(settings_collection[i]))
+        websch.set_fetcher_settings(settings_collection[i])
 
         print("* Create EC2 Instance ...")
         instance_id = aws.create_instance()
@@ -68,6 +71,8 @@ def main():
 
     compute.write_json_file()
     compute.write_csv_file()
+
+    compute.archive_project(project_naming)
 
 
 if __name__ == "__main__":

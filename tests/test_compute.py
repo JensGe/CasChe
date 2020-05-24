@@ -1,6 +1,6 @@
 from systems import compute
 from common import enum, pyd_models as pyd
-
+import os
 
 def test_create_cases():
 
@@ -135,3 +135,26 @@ def test_get_iteration_results():
 
     assert iteration_results1 == asserted_results
     assert iteration_results2 == asserted_results
+
+
+def test_get_stats_results():
+    row = "2020-05-22 00:14:28.19 root INFO DB Stats: frontier_amount: 1005, url_amount: 5230"
+
+    stats_results = compute.get_stats_results(row)
+
+    asserted_results = dict(frontier_amount=1005, url_amount=5230)
+
+    assert stats_results == asserted_results
+
+
+def test_archive_project():
+    if not os.path.exists("fetsim-logs"):
+        os.makedirs("fetsim-logs")
+
+    with open("fetsim-logs/file1.txt", "w") as file1:
+        file1.write("content1")
+    with open("fetsim-logs/file2.txt", "w") as file2:
+        file2.write("content2")
+
+    compute.archive_project("fetsim-logs_test_2020-05-24")
+

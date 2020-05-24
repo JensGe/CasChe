@@ -1,4 +1,5 @@
 import boto3
+import os
 
 ec2 = boto3.client("ec2")
 s3 = boto3.client("s3")
@@ -21,6 +22,9 @@ def terminate_instance(instance_id):
 
 
 def download_file(file_name):
+    if not os.path.exists(logs_folder):
+        os.makedirs(logs_folder)
+
     files = s3.list_objects_v2(Bucket=s3_bucket)
 
     if files["KeyCount"] == 0:
@@ -29,7 +33,6 @@ def download_file(file_name):
 
     for file in files["Contents"]:
         bucket_file_name = s3_bucket + "/" + file_name
-        # print("*** File['Key']= {}".format(file["Key"]))
 
         if file["Key"] == bucket_file_name:
             s3.download_file(
@@ -42,6 +45,5 @@ def download_file(file_name):
     return False
 
 
-# print(download_file("x"))
 
 

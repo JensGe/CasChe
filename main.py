@@ -9,8 +9,11 @@ example_db_settings = dict(
     max_url_amount=5,
     )
 
-project_naming = "{}_paralleltest_1-64".format(datetime.now().strftime("%Y-%m-%d"))
-repetition = 1
+project_settings = dict(
+    name="{}_paralleltest_1-64".format(datetime.now().strftime("%Y-%m-%d")),
+    repetition=1,
+    parallel_fetcher=1,
+)
 
 case_settings = pyd.CaseSettings(
     logging_mode=None,
@@ -41,11 +44,10 @@ def main():
     database.backup_table("url_frontiers")
 
     print("Compute Cases ...")
-    settings_collection = compute.create_cases(case_settings, repetition)
+    settings_collection = compute.create_cases(case_settings, project_settings)
     print("Cases created: {}".format(len(settings_collection)))
 
     for i in range(len(settings_collection)):
-    # for setting in settings_collection:
         print("* Reset Example DB ...")
         websch.delete_example_db()
         database.restore_table("fqdn_frontiers")
@@ -56,23 +58,25 @@ def main():
         websch.set_fetcher_settings(settings_collection[i])
 
         print("* Create EC2 Instance ...")
-        instance_id = aws.create_instance()
-        file_name = instance_id + ".log"
+        instance_ids = aws.create_instance(project_settings)
 
-        file_found = False
-        print("* Waiting for {}.log-File in S3 Bucket ...".format(instance_id))
-        while not file_found:
-            print("-", end="")
-            sleep(30)
-            file_found = aws.download_file(file_name)
+        for instance_id in instance_ids:
+            file_name = instance_id + ".log"
 
-        print("* Terminate EC2 Instance ...")
-        aws.terminate_instance(instance_id)
+            file_found = False
+            print("* Waiting for {}.log-File in S3 Bucket ...".format(instance_id))
+            while not file_found:
+                print("-", end="")
+                sleep(30)
+                file_found = aws.download_file(file_name)
+
+            print("* Terminate EC2 Instance ...")
+            aws.terminate_instance(instance_id)
 
     compute.write_json_file()
     compute.write_csv_file()
 
-    compute.archive_project(project_naming)
+    compute.archive_project(project_settings["name"])
 
 
 if __name__ == "__main__":

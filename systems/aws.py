@@ -1,20 +1,22 @@
 import boto3
 import os
 
-ec2 = boto3.client("ec2")
+ec2 = boto3.client("ec2", region_name="eu-central-1")
 s3 = boto3.client("s3")
 
 s3_bucket = "fetsim-logs"
 logs_folder = "fetsim-logs"
 
 
-def create_instance():
+def create_instance(settings):
     response = ec2.run_instances(
         LaunchTemplate={"LaunchTemplateId": "lt-0344130210c1eaca5", "Version": "5"},
-        MinCount=1,
-        MaxCount=1,
+        MinCount=settings["parallel_fetcher"],
+        MaxCount=settings["parallel_fetcher"],
     )
-    return response["Instances"][0]["InstanceId"]
+    ids = [instance["InstanceId"] for instance in response["Instances"]]
+    # return response["Instances"][0]["InstanceId"]
+    return ids
 
 
 def terminate_instance(instance_id):

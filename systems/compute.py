@@ -1,9 +1,11 @@
 from itertools import product
-import os, json, csv
+import os
+import json
+import csv
 import shutil
 
 
-def create_cases(case_settings, repetition: int = 1):
+def create_cases(case_settings, project_settings):
     case_settings_dict = dict()
 
     for attr, val in vars(case_settings).items():
@@ -12,7 +14,7 @@ def create_cases(case_settings, repetition: int = 1):
 
     settings_collection = []
     for element in dict_product(case_settings_dict):
-        settings_collection.extend(element for _ in range(repetition))
+        settings_collection.extend(element for _ in range(project_settings["repetition"]))
 
     return settings_collection
 

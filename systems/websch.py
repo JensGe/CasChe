@@ -54,7 +54,11 @@ def wait_for_example_db(settings):
 
         fqdn_reached = example_db["frontier_amount"] == settings["fqdn_amount"]
 
-        url_th = (settings["min_url_amount"] + settings["max_url_amount"]) / 2.05
+        url_th = (
+            (settings["min_url_amount"] + settings["max_url_amount"])
+            * settings["fqdn_amount"]
+            / 2.05
+        )
         url_reached = example_db["url_amount"] >= url_th
 
         if fqdn_reached and url_reached:
@@ -64,7 +68,6 @@ def wait_for_example_db(settings):
                 )
             )
             done = True
-
 
 
 def set_fetcher_settings(settings):

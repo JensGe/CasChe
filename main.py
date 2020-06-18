@@ -10,18 +10,18 @@ example_db_settings = dict(
     )
 
 project_settings = dict(
-    name="{}_three_parallel_fetcher".format(datetime.now().strftime("%Y-%m-%d")),
+    name="{}_test".format(datetime.now().strftime("%Y-%m-%d")),
     repetition=1,
-    parallel_fetcher=3,
+    parallel_fetcher=1,
 )
 
 case_settings = pyd.CaseSettings(
-    logging_mode=None,
+    logging_mode=[20],
     crawling_speed_factor=[10],
     default_crawl_delay=[10],
     parallel_process=[4],
     iterations=[1],
-    fqdn_amount=[30],
+    fqdn_amount=[10],
     url_amount=None,
     long_term_mode=[enum.LTF.large_sites_first],
     short_term_mode=[enum.STF.new_pages_first],

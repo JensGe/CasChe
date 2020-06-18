@@ -40,11 +40,11 @@ def get_iteration_results(row):
 
 
 def get_stats_results(row):
-    data_string = row[row.find("Stats:") + 7 :]
+    data_string = row[row.find("Stats:") + 7:-1]
     data_list = data_string.split(", ")
     for i in range(len(data_list)):
-        data_list[i] = data_list[i].split(" ")
-    data_dict = {k[0][:-1]: int(k[1]) for k in data_list}
+        data_list[i] = data_list[i].split(": ")
+    data_dict = {k[0]: k[1] for k in data_list}
     return data_dict
 
 
@@ -98,6 +98,8 @@ def write_csv_file():
             "submit",
             "frontier_amount",
             "url_amount",
+            'avg_freshness',
+            'visited_ratio'
         ]
 
         writer = csv.DictWriter(csv_file, fieldnames=field_names, delimiter=";")

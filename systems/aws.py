@@ -15,7 +15,6 @@ def create_instance(settings):
         MaxCount=settings["parallel_fetcher"],
     )
     ids = [instance["InstanceId"] for instance in response["Instances"]]
-    # return response["Instances"][0]["InstanceId"]
     return ids
 
 

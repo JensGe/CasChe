@@ -69,6 +69,13 @@ def wait_for_example_db(settings):
             )
             done = True
 
+        else:
+            print(
+                "** Threshold {} not reached: url_amount={}".format(
+                    url_th, example_db["url_amount"]
+                )
+            )
+
 
 def set_fetcher_settings(settings):
     requests.patch(

@@ -10,9 +10,9 @@ example_db_settings = dict(
     )
 
 project_settings = dict(
-    name="{}_test".format(datetime.now().strftime("%Y-%m-%d")),
-    repetition=1,
-    parallel_fetcher=1,
+    name="{}_three_parallel_fetcher".format(datetime.now().strftime("%Y-%m-%d")),
+    repetition=3,
+    parallel_fetcher=3,
 )
 
 case_settings = pyd.CaseSettings(

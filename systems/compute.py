@@ -52,7 +52,7 @@ def jsonify_results():
     results = list()
     for subdir, dirs, files in os.walk("fetsim-logs"):
         for file in files:
-            if file.endswith('.logs'):
+            if file.endswith('.log'):
                 with open(subdir + "/" + file, "r") as f:
                     for row in f:
                         if "Fetcher Settings" in row:

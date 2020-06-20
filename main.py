@@ -3,31 +3,32 @@ from common import enum, pyd_models as pyd
 from time import sleep
 from datetime import datetime
 
+
 example_db_settings = dict(
-    fqdn_amount=250,
+    fqdn_amount=1000,
     min_url_amount=5,
     max_url_amount=5,
-    )
+)
 
 project_settings = dict(
-    name="minimal_test",
+    name="parallel_processes",
     date=datetime.now().strftime("%Y-%m-%d"),
-    repetition=1,
-    parallel_fetcher=1,
+    repetition=5,
 )
 
 case_settings = pyd.CaseSettings(
     logging_mode=[20],
-    crawling_speed_factor=[10],
-    default_crawl_delay=[10],
-    parallel_process=[4],
+    crawling_speed_factor=[1.0],
+    default_crawl_delay=[5],
+    parallel_process=[i + 1 for i in range(30)],
+    parallel_fetcher=[1],
     iterations=[1],
-    fqdn_amount=[10],
+    fqdn_amount=[50],
     url_amount=[0],
-    long_term_mode=[enum.LTF.large_sites_first],
-    short_term_mode=[enum.STF.new_pages_first],
-    min_links_per_page=[1],
-    max_links_per_page=[1],
+    long_term_mode=[enum.LTF.old_sites_first],
+    short_term_mode=[enum.STF.old_pages_first],
+    min_links_per_page=[5],
+    max_links_per_page=[5],
     lpp_distribution_type=[enum.LPPDISTR.discrete],
     internal_vs_external_threshold=[1.0],
     new_vs_existing_threshold=[1.0],
@@ -59,7 +60,7 @@ def main():
         websch.set_fetcher_settings(settings_collection[i])
 
         print("* Create EC2 Instance(s) ...")
-        instance_ids = aws.create_instance(project_settings)
+        instance_ids = aws.create_instance(settings_collection[i])
 
         for instance_id in instance_ids:
             file_name = instance_id + ".log"

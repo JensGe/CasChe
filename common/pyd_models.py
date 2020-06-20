@@ -18,6 +18,7 @@ class FetcherSettings(BaseModel):
     crawling_speed_factor: float = 10.0
     default_crawl_delay: int = 10
     parallel_process: int = 10
+    parallel_fetcher: int = 1
 
     iterations: int = 10
     fqdn_amount: int = 30
@@ -39,6 +40,7 @@ class CaseSettings(BaseModel):
     crawling_speed_factor: List[float] = None
     default_crawl_delay: List[int] = None
     parallel_process: List[int] = None
+    parallel_fetcher: List[int] = None
 
     iterations: List[int] = None
     fqdn_amount: List[int] = None

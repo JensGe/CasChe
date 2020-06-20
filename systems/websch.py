@@ -57,7 +57,7 @@ def wait_for_example_db(settings):
         url_th = round(
             (settings["min_url_amount"] + settings["max_url_amount"])
             * settings["fqdn_amount"]
-            / 2.05
+            / 2.15
         )
         url_reached = example_db["url_amount"] >= url_th
 

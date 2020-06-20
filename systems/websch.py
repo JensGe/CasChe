@@ -54,7 +54,7 @@ def wait_for_example_db(settings):
 
         fqdn_reached = example_db["frontier_amount"] == settings["fqdn_amount"]
 
-        url_th = (
+        url_th = round(
             (settings["min_url_amount"] + settings["max_url_amount"])
             * settings["fqdn_amount"]
             / 2.05

@@ -1,9 +1,18 @@
 from systems import compute
 from common import enum, pyd_models as pyd
+from datetime import datetime
 import os
 
 
+
 def test_create_cases():
+
+    project_settings = dict(
+        name="test_test",
+        date=datetime.now().strftime("%Y-%m-%d"),
+        repetition=1,
+        parallel_fetcher=1,
+    )
 
     cases = pyd.CaseSettings(
         parallel_process=[1, 2, 4],
@@ -11,7 +20,7 @@ def test_create_cases():
         default_crawl_delay=[1],
     )
 
-    s_coll = compute.create_cases(cases)
+    s_coll = compute.create_cases(cases, project_settings)
 
     assert isinstance(s_coll, list)
     assert len(s_coll) == 6
@@ -54,9 +63,14 @@ def test_create_repetition_cases():
         parallel_process=[1, 2],
         default_crawl_delay=[1],
     )
-    repetition = 3
+    project_settings = dict(
+        name="test_test",
+        date=datetime.now().strftime("%Y-%m-%d"),
+        repetition=3,
+        parallel_fetcher=1,
+    )
 
-    s_coll = compute.create_cases(cases, repetition)
+    s_coll = compute.create_cases(cases, project_settings)
 
     assert len(s_coll) == 6
 
@@ -86,14 +100,6 @@ def test_create_repetition_cases():
             "default_crawl_delay": 1,
         },
     ]
-
-
-
-def test_parse_results():
-    results = compute.jsonify_results()
-    print(results)
-
-    assert len(results) > 0
 
 
 def test_get_fetcher_settings():
@@ -152,10 +158,17 @@ def test_archive_project():
     if not os.path.exists("fetsim-logs"):
         os.makedirs("fetsim-logs")
 
-    with open("fetsim-logs/file1.txt", "w") as file1:
+    project_settings = dict(
+        name="test_test",
+        date=datetime.now().strftime("%Y-%m-%d"),
+        repetition=1,
+        parallel_fetcher=1,
+    )
+
+    with open("fetsim-logs/file1.log", "w") as file1:
         file1.write("content1")
-    with open("fetsim-logs/file2.txt", "w") as file2:
+    with open("fetsim-logs/file2.log", "w") as file2:
         file2.write("content2")
 
-    compute.archive_project("fetsim-logs_test_2020-05-24")
+    compute.archive_project(project_settings)
 

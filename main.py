@@ -10,9 +10,10 @@ example_db_settings = dict(
     )
 
 project_settings = dict(
-    name="{}_three_parallel_fetcher".format(datetime.now().strftime("%Y-%m-%d")),
-    repetition=3,
-    parallel_fetcher=3,
+    name="minimal_test",
+    date=datetime.now().strftime("%Y-%m-%d"),
+    repetition=1,
+    parallel_fetcher=1,
 )
 
 case_settings = pyd.CaseSettings(
@@ -22,12 +23,12 @@ case_settings = pyd.CaseSettings(
     parallel_process=[4],
     iterations=[1],
     fqdn_amount=[10],
-    url_amount=None,
+    url_amount=[0],
     long_term_mode=[enum.LTF.large_sites_first],
     short_term_mode=[enum.STF.new_pages_first],
     min_links_per_page=[1],
     max_links_per_page=[1],
-    lpp_distribution_type=None,
+    lpp_distribution_type=[enum.LPPDISTR.discrete],
     internal_vs_external_threshold=[1.0],
     new_vs_existing_threshold=[1.0],
 )
@@ -76,7 +77,7 @@ def main():
     compute.write_json_file()
     compute.write_csv_file()
 
-    compute.archive_project(project_settings["name"])
+    compute.archive_project(project_settings)
 
 
 if __name__ == "__main__":

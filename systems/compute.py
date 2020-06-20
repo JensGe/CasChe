@@ -52,21 +52,22 @@ def jsonify_results():
     results = list()
     for subdir, dirs, files in os.walk("fetsim-logs"):
         for file in files:
-            with open(subdir + "/" + file, "rt") as f:
-                for row in f:
-                    if "Fetcher Settings" in row:
-                        fetcher_settings = get_fetcher_settings(row)
-                    if "Iteration Stats" in row:
-                        iteration_stats = get_iteration_results(row)
-                    if "DB Stats" in row:
-                        db_stats = get_stats_results(row)
-            results.append(
-                dict(
-                    fetcher_settings=fetcher_settings,
-                    iteration_stats=iteration_stats,
-                    db_stats=db_stats,
+            if file.endswith('.logs'):
+                with open(subdir + "/" + file, "r") as f:
+                    for row in f:
+                        if "Fetcher Settings" in row:
+                            fetcher_settings = get_fetcher_settings(row)
+                        if "Iteration Stats" in row:
+                            iteration_stats = get_iteration_results(row)
+                        if "DB Stats" in row:
+                            db_stats = get_stats_results(row)
+                results.append(
+                    dict(
+                        fetcher_settings=fetcher_settings,
+                        iteration_stats=iteration_stats,
+                        db_stats=db_stats,
+                    )
                 )
-            )
     return results
 
 
@@ -113,8 +114,9 @@ def write_csv_file():
             )
 
 
-def archive_project(filename):
+def archive_project(settings):
     file_iter = 1
+    filename = "{}_{}".format(settings["date"], settings["name"])
     org_filename = filename
     while os.path.isfile("finished_results/{}.zip".format(filename)):
         file_iter += 1

@@ -11,6 +11,7 @@ def test_create_single_instances():
     print(single_id_in_list)
 
     assert len(single_id_in_list) == 1
+    aws.terminate_instance(single_id_in_list[0])
 
 
 def test_create_multiple_instances():
@@ -21,6 +22,8 @@ def test_create_multiple_instances():
     )
     multi_ids = aws.create_instance(multiple_fetcher_settings)
     print(multi_ids)
-
     assert len(multi_ids) == 4
+    for id in multi_ids:
+        aws.terminate_instance(id)
+
 

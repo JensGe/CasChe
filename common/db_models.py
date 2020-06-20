@@ -6,10 +6,11 @@ from sqlalchemy import (
     String,
     DateTime,
     Float,
-    Index,
 )
 
-from systems.db_con import Base
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 
 class FetcherSettings(Base):

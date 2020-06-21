@@ -83,6 +83,7 @@ def write_csv_file():
             "crawling_speed_factor",
             "default_crawl_delay",
             "parallel_process",
+            "parallel_fetcher",
             "iterations",
             "fqdn_amount",
             "url_amount",

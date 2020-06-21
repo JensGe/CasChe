@@ -8,6 +8,7 @@ example_db_settings = dict(
     fqdn_amount=1000,
     min_url_amount=5,
     max_url_amount=5,
+    fixed_crawl_delay=1,
 )
 
 project_settings = dict(
@@ -18,17 +19,18 @@ project_settings = dict(
 
 case_settings = pyd.CaseSettings(
     logging_mode=[20],
-    crawling_speed_factor=[1.0],
-    default_crawl_delay=[5],
-    parallel_process=[i + 1 for i in range(30)],
-    parallel_fetcher=[1],
+    crawling_speed_factor=[10.0],
+    default_crawl_delay=[1],
+    # parallel_process=[i + 1 for i in range(30)],
+    parallel_process=[1, 2],
+    parallel_fetcher=[1, 2],
     iterations=[1],
-    fqdn_amount=[50],
+    fqdn_amount=[10],
     url_amount=[0],
     long_term_mode=[enum.LTF.old_sites_first],
     short_term_mode=[enum.STF.old_pages_first],
-    min_links_per_page=[5],
-    max_links_per_page=[5],
+    min_links_per_page=[3],
+    max_links_per_page=[3],
     lpp_distribution_type=[enum.LPPDISTR.discrete],
     internal_vs_external_threshold=[1.0],
     new_vs_existing_threshold=[1.0],
@@ -46,14 +48,14 @@ def main():
     websch.wait_for_example_db(example_db_settings)
 
     print("Backup FQDN- & URL-Frontier Tables ...")
-    database.backup_table("fqdn_frontiers")
-    database.backup_table("url_frontiers")
+    database.backup_table("frontiers")
+    database.backup_table("urls")
 
     for i in range(len(settings_collection)):
         print("* Reset Example DB ...")
         websch.delete_example_db()
-        database.restore_table("fqdn_frontiers")
-        database.restore_table("url_frontiers")
+        database.restore_table("frontiers")
+        database.restore_table("urls")
 
         print("* Set Fetcher Settings ...")
         print("* Case {}".format(settings_collection[i]))

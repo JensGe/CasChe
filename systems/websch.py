@@ -26,6 +26,7 @@ def generate_example_db(
     max_url_amount: int = 50,
     visited_ratio: float = 0.00,
     connection_amount: int = 0,
+    fixed_crawl_delay: int = None,
 ):
     requests.post(
         websch_database,
@@ -36,6 +37,7 @@ def generate_example_db(
             "max_url_amount": max_url_amount,
             "visited_ratio": visited_ratio,
             "connection_amount": connection_amount,
+            "fixed_crawl_delay": fixed_crawl_delay,
         },
     )
 

@@ -61,7 +61,7 @@ case_settings = pyd.CaseSettings(
     logging_mode=[20],
     crawling_speed_factor=[10.0],
     default_crawl_delay=[1],
-    parallel_process=[16], #todo
+    parallel_process=[12],
     parallel_fetcher=[i + 1 for i in range(30)],
     iterations=[1],
     fqdn_amount=[10],
@@ -76,6 +76,44 @@ case_settings = pyd.CaseSettings(
 )
 ```
 
+# 2b. Parallel Fetcher real test
+```python
+from common import enum
+from common import pyd_models as pyd
+from datetime import datetime
+
+example_db_settings = dict(
+    fqdn_amount=5000,
+    min_url_amount=5,
+    max_url_amount=5,
+    fixed_crawl_delay=10,
+)
+
+project_settings = dict(
+    name="many_fetchers_real_fqdn_hash",
+    date=datetime.now().strftime("%Y-%m-%d"),
+    repetition=1,
+)
+
+case_settings = pyd.CaseSettings(
+    logging_mode=[10],
+    crawling_speed_factor=[10.0],
+    default_crawl_delay=[10],
+    parallel_process=[12],
+    parallel_fetcher=[5],
+    iterations=[10],
+    fqdn_amount=[0],
+    url_amount=[0],
+    long_term_mode=[enum.LTF.fqdn_hash],
+    short_term_mode=[enum.STF.old_pages_first],
+    min_links_per_page=[3],
+    max_links_per_page=[3],
+    lpp_distribution_type=[enum.LPPDISTR.discrete],
+    internal_vs_external_threshold=[0.85],
+    new_vs_existing_threshold=[0.35],
+)
+
+```
 
 # 3. Large Sites vs Small Sites
 ```python

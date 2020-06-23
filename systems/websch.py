@@ -11,7 +11,7 @@ def delete_example_db():
         websch_database,
         json={
             "delete_url_refs": True,
-            "delete_crawlers": True,
+            "delete_fetchers": True,
             "delete_urls": True,
             "delete_fqdns": True,
             "delete_reserved_fqdns": True,
@@ -20,7 +20,7 @@ def delete_example_db():
 
 
 def generate_example_db(
-    crawler_amount: int = 0,
+    fetcher: int = 0,
     fqdn_amount: int = 30,
     min_url_amount: int = 1,
     max_url_amount: int = 50,
@@ -31,7 +31,7 @@ def generate_example_db(
     requests.post(
         websch_database,
         json={
-            "crawler_amount": crawler_amount,
+            "fetcher_amount": fetcher,
             "fqdn_amount": fqdn_amount,
             "min_url_amount": min_url_amount,
             "max_url_amount": max_url_amount,
@@ -62,6 +62,8 @@ def wait_for_example_db(settings):
             / 2.15
         )
         url_reached = example_db["url_amount"] >= url_th
+
+        hash_reached = example_db
 
         if fqdn_reached and url_reached:
             print(

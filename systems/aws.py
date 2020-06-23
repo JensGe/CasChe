@@ -10,7 +10,7 @@ logs_folder = "fetsim-logs"
 
 def create_instance(settings):
     response = ec2.run_instances(
-        LaunchTemplate={"LaunchTemplateId": "lt-0344130210c1eaca5", "Version": "5"},
+        LaunchTemplate={"LaunchTemplateId": "lt-0344130210c1eaca5", "Version": "6"},
         MinCount=settings["parallel_fetcher"],
         MaxCount=settings["parallel_fetcher"],
     )
@@ -29,7 +29,6 @@ def download_file(file_name):
     files = s3.list_objects_v2(Bucket=s3_bucket)
 
     if files["KeyCount"] == 0:
-        print("*** Log List empty")
         return False
 
     for file in files["Contents"]:
@@ -40,6 +39,10 @@ def download_file(file_name):
                 s3_bucket,
                 "{}/{}".format(s3_bucket, file_name),
                 logs_folder + "/" + file_name,
+            )
+            s3.delete_object(
+                Bucket=s3_bucket,
+                Key="{}/{}".format(s3_bucket, file_name),
             )
             return True
 

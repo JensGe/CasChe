@@ -50,11 +50,11 @@ def get_stats_results(row):
 
 def jsonify_results():
     results = list()
-    iteration_stats = list()
-    db_stats = list()
 
     for subdir, dirs, files in os.walk("fetsim-logs"):
         for file in files:
+            iteration_stats = list()
+            db_stats = list()
             if file.endswith('.log'):
                 with open(subdir + "/" + file, "r") as f:
                     for row in f:
@@ -63,15 +63,13 @@ def jsonify_results():
                         if "Iteration Stats" in row:
                             iteration_stats.append(get_iteration_results(row))
                         if "DB Stats" in row:
-                            db_stats = get_stats_results(row)
-                            # db_stats.append(get_stats_results(row))
+                            db_stats.append(get_stats_results(row))
                 for i in range(len(iteration_stats)):
                     results.append(
                         dict(
                             fetcher_settings=fetcher_settings,
                             iteration_stats=iteration_stats[i],
-                            db_stats=db_stats,
-                            # db_stats=db_stats[i],
+                            db_stats=db_stats[i],
                         )
                     )
     return results

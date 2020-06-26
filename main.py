@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 example_db_settings = dict(
-    fqdn_amount=10,
+    fqdn_amount=1000,
     min_url_amount=1,
     max_url_amount=1,
     fixed_crawl_delay=5,
@@ -14,25 +14,25 @@ example_db_settings = dict(
 project_settings = dict(
     name="test",
     date=datetime.now().strftime("%Y-%m-%d"),
-    repetition=1,
+    repetition=2,
 )
 
 case_settings = pyd.CaseSettings(
-    logging_mode=[10],
+    logging_mode=[20],
     crawling_speed_factor=[10.0],
-    default_crawl_delay=[10],
+    default_crawl_delay=[5],
     parallel_process=[12],
-    parallel_fetcher=[3],
-    iterations=[3],
+    parallel_fetcher=[2],
+    iterations=[5],
     fqdn_amount=[1],
-    url_amount=[0],
+    url_amount=[5],
     long_term_mode=[enum.LTF.fqdn_hash],
     short_term_mode=[enum.STF.old_pages_first],
-    min_links_per_page=[3],
-    max_links_per_page=[3],
+    min_links_per_page=[2],
+    max_links_per_page=[2],
     lpp_distribution_type=[enum.LPPDISTR.discrete],
-    internal_vs_external_threshold=[0.85],
-    new_vs_existing_threshold=[0.35],
+    internal_vs_external_threshold=[1.0],
+    new_vs_existing_threshold=[1.0],
 )
 
 

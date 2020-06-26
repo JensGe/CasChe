@@ -50,6 +50,9 @@ def get_stats_results(row):
 
 def jsonify_results():
     results = list()
+    iteration_stats = list()
+    db_stats = list()
+
     for subdir, dirs, files in os.walk("fetsim-logs"):
         for file in files:
             if file.endswith('.log'):
@@ -58,16 +61,19 @@ def jsonify_results():
                         if "Fetcher Settings" in row:
                             fetcher_settings = get_fetcher_settings(row)
                         if "Iteration Stats" in row:
-                            iteration_stats = get_iteration_results(row)
+                            iteration_stats.append(get_iteration_results(row))
                         if "DB Stats" in row:
                             db_stats = get_stats_results(row)
-                results.append(
-                    dict(
-                        fetcher_settings=fetcher_settings,
-                        iteration_stats=iteration_stats,
-                        db_stats=db_stats,
+                            # db_stats.append(get_stats_results(row))
+                for i in range(len(iteration_stats)):
+                    results.append(
+                        dict(
+                            fetcher_settings=fetcher_settings,
+                            iteration_stats=iteration_stats[i],
+                            db_stats=db_stats,
+                            # db_stats=db_stats[i],
+                        )
                     )
-                )
     return results
 
 
@@ -101,7 +107,8 @@ def write_csv_file():
             "frontier_amount",
             "url_amount",
             'avg_freshness',
-            'visited_ratio'
+            'visited_ratio',
+            'fqdn_hash_range'
         ]
 
         writer = csv.DictWriter(csv_file, fieldnames=field_names, delimiter=";")

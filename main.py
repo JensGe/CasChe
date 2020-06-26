@@ -5,26 +5,26 @@ from datetime import datetime
 
 
 example_db_settings = dict(
-    fqdn_amount=1000,
-    min_url_amount=5,
-    max_url_amount=5,
-    fixed_crawl_delay=10,
+    fqdn_amount=10,
+    min_url_amount=1,
+    max_url_amount=1,
+    fixed_crawl_delay=5,
 )
 
 project_settings = dict(
-    name="many_fetchers_real_fqdn_hash",
+    name="test",
     date=datetime.now().strftime("%Y-%m-%d"),
     repetition=1,
 )
 
 case_settings = pyd.CaseSettings(
-    logging_mode=[20],
+    logging_mode=[10],
     crawling_speed_factor=[10.0],
     default_crawl_delay=[10],
     parallel_process=[12],
-    parallel_fetcher=[1],
-    iterations=[5],
-    fqdn_amount=[10],
+    parallel_fetcher=[3],
+    iterations=[3],
+    fqdn_amount=[1],
     url_amount=[0],
     long_term_mode=[enum.LTF.fqdn_hash],
     short_term_mode=[enum.STF.old_pages_first],

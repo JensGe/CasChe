@@ -172,3 +172,33 @@ def test_archive_project():
 
     compute.archive_project(project_settings)
 
+
+def test_multiple_iteration_results():
+    if not os.path.exists("fetsim-logs"):
+        os.makedirs("fetsim-logs")
+
+    with open("fetsim-logs/file1.log", "w") as file1:
+        file1.write("""
+2020-06-23 10:56:19.585 root INFO Fetcher Settings: {'logging_mode': 20, 'crawling_speed_factor': 10.0, 'default_crawl_delay': 10, 'parallel_process': 12, 'parallel_fetcher': 5, 'iterations': 5, 'fqdn_amount': 10, 'url_amount': 0, 'long_term_mode': 'fqdn_hash', 'short_term_mode': 'old_pages_first', 'min_links_per_page': 3, 'max_links_per_page': 3, 'lpp_distribution_type': 'discrete', 'internal_vs_external_threshold': 0.85, 'new_vs_existing_threshold': 0.35}
+2020-06-23 10:56:19.623 root INFO Frontier Stats: 0 FQDNs, 0 URLs
+2020-06-23 10:56:19.717 root INFO Response Stats: 0 FQDNs, 0 URLs
+2020-06-23 10:56:19.725 root INFO Iteration Stats: load (38.244 ms), fetch (0.093 s), fetch_cpu (0.897 s), submit (8.064 ms).
+2020-06-23 10:56:19.758 root INFO Frontier Stats: 0 FQDNs, 0 URLs
+2020-06-23 10:56:19.853 root INFO Response Stats: 0 FQDNs, 0 URLs
+2020-06-23 10:56:19.861 root INFO Iteration Stats: load (32.092 ms), fetch (0.095 s), fetch_cpu (0.968 s), submit (7.377 ms).
+2020-06-23 10:56:19.895 root INFO Frontier Stats: 0 FQDNs, 0 URLs
+2020-06-23 10:56:19.983 root INFO Response Stats: 0 FQDNs, 0 URLs
+2020-06-23 10:56:19.990 root INFO Iteration Stats: load (33.396 ms), fetch (0.087 s), fetch_cpu (1.048 s), submit (6.756 ms).
+2020-06-23 10:56:20.78 root INFO Frontier Stats: 0 FQDNs, 0 URLs
+2020-06-23 10:56:20.184 root INFO Response Stats: 0 FQDNs, 0 URLs
+2020-06-23 10:56:20.192 root INFO Iteration Stats: load (88.091 ms), fetch (0.106 s), fetch_cpu (1.129 s), submit (6.707 ms).
+2020-06-23 10:56:20.228 root INFO Frontier Stats: 0 FQDNs, 0 URLs
+2020-06-23 10:56:20.378 root INFO Response Stats: 0 FQDNs, 0 URLs
+2020-06-23 10:56:20.386 root INFO Iteration Stats: load (36.013 ms), fetch (0.149 s), fetch_cpu (1.215 s), submit (7.14 ms).
+2020-06-23 10:56:40.457 root INFO DB Stats: frontier_amount: 1042, url_amount: 5218, avg_freshness: 2020-06-23 10:56:23.233600, visited_ratio: 0.038328861632809505
+2020-06-23 10:56:40.685 root INFO Upload: i-0484db4715db2d984.log
+        """)
+
+    results = compute.jsonify_results()
+    print(results)
+    assert len(results) == 5

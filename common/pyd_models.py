@@ -14,25 +14,27 @@ class ExampleDBSettings(BaseModel):
 
 
 class FetcherSettings(BaseModel):
-    logging_mode: int = 20  # 10: DEBUG, 20: INFO
-    crawling_speed_factor: float = 10.0
-    default_crawl_delay: int = 10
-    parallel_process: int = 10
+
+    logging_mode: int = 20
+    crawling_speed_factor: float = 10
+    default_crawl_delay: int = 5
+    parallel_process: int = 12
     parallel_fetcher: int = 1
 
-    iterations: int = 10
-    fqdn_amount: int = 30
-    url_amount: int = 0  # unlimited
+    iterations: int = 1
+    fqdn_amount: int = 10
+    url_amount: int = 0
 
-    long_term_mode = enum.LTF.random
-    short_term_mode = enum.STF.random
+    short_term_prio_mode: enum.SHORTPRIO = enum.SHORTPRIO.random
+    long_term_prio_mode: enum.LONGPRIO = enum.LONGPRIO.random
+    long_term_part_mode: enum.LONGPART = enum.LONGPART.none
 
-    min_links_per_page: int = 2  # Check Literature
-    max_links_per_page: int = 5
-    lpp_distribution_type: enum.LPPDISTR = enum.LPPDISTR.discrete
+    min_links_per_page: int = 1
+    max_links_per_page: int = 1
+    lpp_distribution_type: enum.PAGELINKDISTR = enum.PAGELINKDISTR.discrete
 
-    internal_vs_external_threshold: float = 0.85  # Check Literature
-    new_vs_existing_threshold: float = 0.35
+    internal_vs_external_threshold: float = 1.0
+    new_vs_existing_threshold: float = 1.0
 
 
 class CaseSettings(BaseModel):
@@ -46,12 +48,13 @@ class CaseSettings(BaseModel):
     fqdn_amount: List[int] = None
     url_amount: List[int] = None
 
-    long_term_mode: List[enum.LTF] = None
-    short_term_mode: List[enum.STF] = None
+    short_term_prio_mode: List[enum.SHORTPRIO] = None
+    long_term_prio_mode: List[enum.LONGPRIO] = None
+    long_term_part_mode: List[enum.LONGPART] = None
 
-    min_links_per_page: List[int] = None  # Check Literature
+    min_links_per_page: List[int] = None
     max_links_per_page: List[int] = None
-    lpp_distribution_type: List[enum.LPPDISTR] = None
+    lpp_distribution_type: List[enum.PAGELINKDISTR] = None
 
     internal_vs_external_threshold: List[float] = None
     new_vs_existing_threshold: List[float] = None

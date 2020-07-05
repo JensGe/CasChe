@@ -1,5 +1,10 @@
+TEST COLLECTION
+===============
 
-# 1. Parallel Process Test
+# Parallel Processes
+## Metrics
+
+## Settings
 ```python
 from common import enum
 from common import pyd_models as pyd
@@ -15,17 +20,17 @@ example_db_settings = dict(
 project_settings = dict(
     name="parallel_processes",
     date=datetime.now().strftime("%Y-%m-%d"),
-    repetition=5,
+    repetition=1,
 )
 
 case_settings = pyd.CaseSettings(
     logging_mode=[20],
     crawling_speed_factor=[10.0],
     default_crawl_delay=[1],
-    parallel_process=[i + 1 for i in range(30)],
+    parallel_process=[i*2 for i in range(1,16)],
     parallel_fetcher=[1],
     iterations=[1],
-    fqdn_amount=[10],
+    fqdn_amount=[i*4 for i in range(1,12)],
     url_amount=[0],
     long_term_part_mode=[enum.LONGPART.none],
     long_term_prio_mode=[enum.LONGPRIO.old_sites_first],
@@ -39,7 +44,10 @@ case_settings = pyd.CaseSettings(
 ```
 
 
-# 2. Parallel Fetcher
+# Parallel Fetcher
+## Metrics
+
+## Settings
 ```python
 from common import enum
 from common import pyd_models as pyd
@@ -78,7 +86,11 @@ case_settings = pyd.CaseSettings(
 )
 ```
 
-# 2b. Parallel Fetcher real test
+
+# Parallel Fetcher real test
+## Metrics
+
+## Settings
 ```python
 from common import enum
 from common import pyd_models as pyd
@@ -118,7 +130,11 @@ case_settings = pyd.CaseSettings(
 
 ```
 
+
 # 3. Large Sites vs Small Sites
+## Metrics
+
+## Settings
 ```python
 from common import enum
 from common import pyd_models as pyd
@@ -156,7 +172,10 @@ case_settings = pyd.CaseSettings(
 )
 ```
 
-4. old vs new Sites and Pages
+# 4. old vs new Sites and Pages
+## Metriken
+
+## Settings
 ```python
 from common import enum
 from common import pyd_models as pyd
@@ -193,3 +212,7 @@ case_settings = pyd.CaseSettings(
     new_vs_existing_threshold=[1.0],
 )
 ```
+
+# Partitionierung TLD vs. FQDN Hash vs. CH
+
+Web Crawler Metrik: Durchsatz

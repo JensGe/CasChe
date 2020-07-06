@@ -83,6 +83,6 @@ def wait_for_example_db(settings):
 
 
 def set_fetcher_settings(settings):
-    requests.patch(
+    requests.put(
         websch_settings, json=settings,
     )

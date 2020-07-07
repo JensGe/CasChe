@@ -4,7 +4,6 @@ from datetime import datetime
 import os
 
 
-
 def test_create_cases():
 
     project_settings = dict(
@@ -16,7 +15,7 @@ def test_create_cases():
 
     cases = pyd.CaseSettings(
         parallel_process=[1, 2, 4],
-        long_term_mode=[enum.LTF.small_sites_first, enum.LTF.large_sites_first],
+        long_term_prio_mode=[enum.LONGPRIO.small_sites_first, enum.LONGPRIO.large_sites_first],
         default_crawl_delay=[1],
     )
 
@@ -28,32 +27,32 @@ def test_create_cases():
         {
             "default_crawl_delay": 1,
             "parallel_process": 1,
-            "long_term_mode": "small_sites_first",
+            "long_term_prio_mode": "small_sites_first",
         },
         {
             "default_crawl_delay": 1,
             "parallel_process": 1,
-            "long_term_mode": "large_sites_first",
+            "long_term_prio_mode": "large_sites_first",
         },
         {
             "default_crawl_delay": 1,
             "parallel_process": 2,
-            "long_term_mode": "small_sites_first",
+            "long_term_prio_mode": "small_sites_first",
         },
         {
             "default_crawl_delay": 1,
             "parallel_process": 2,
-            "long_term_mode": "large_sites_first",
+            "long_term_prio_mode": "large_sites_first",
         },
         {
             "default_crawl_delay": 1,
             "parallel_process": 4,
-            "long_term_mode": "small_sites_first",
+            "long_term_prio_mode": "small_sites_first",
         },
         {
             "default_crawl_delay": 1,
             "parallel_process": 4,
-            "long_term_mode": "large_sites_first",
+            "long_term_prio_mode": "large_sites_first",
         },
     ]
 
@@ -145,11 +144,11 @@ def test_get_iteration_results():
 
 
 def test_get_stats_results():
-    row = "2020-05-22 00:14:28.19 root INFO DB Stats: frontier_amount: 1005, url_amount: 5230"
+    row = "2020-05-22 00:14:28.19 root INFO DB Stats: frontier_amount: 1005, url_amount: 5230 "
 
     stats_results = compute.get_stats_results(row)
 
-    asserted_results = dict(frontier_amount=1005, url_amount=5230)
+    asserted_results = dict(frontier_amount='1005', url_amount='5230')
 
     assert stats_results == asserted_results
 
@@ -183,15 +182,19 @@ def test_multiple_iteration_results():
 2020-06-23 10:56:19.623 root INFO Frontier Stats: 0 FQDNs, 0 URLs
 2020-06-23 10:56:19.717 root INFO Response Stats: 0 FQDNs, 0 URLs
 2020-06-23 10:56:19.725 root INFO Iteration Stats: load (38.244 ms), fetch (0.093 s), fetch_cpu (0.897 s), submit (8.064 ms).
+2020-06-23 10:56:40.457 root INFO DB Stats: frontier_amount: 1042, url_amount: 5218, avg_freshness: 2020-06-23 10:56:23.233600, visited_ratio: 0.038328861632809505
 2020-06-23 10:56:19.758 root INFO Frontier Stats: 0 FQDNs, 0 URLs
 2020-06-23 10:56:19.853 root INFO Response Stats: 0 FQDNs, 0 URLs
 2020-06-23 10:56:19.861 root INFO Iteration Stats: load (32.092 ms), fetch (0.095 s), fetch_cpu (0.968 s), submit (7.377 ms).
+2020-06-23 10:56:40.457 root INFO DB Stats: frontier_amount: 1042, url_amount: 5218, avg_freshness: 2020-06-23 10:56:23.233600, visited_ratio: 0.038328861632809505
 2020-06-23 10:56:19.895 root INFO Frontier Stats: 0 FQDNs, 0 URLs
 2020-06-23 10:56:19.983 root INFO Response Stats: 0 FQDNs, 0 URLs
 2020-06-23 10:56:19.990 root INFO Iteration Stats: load (33.396 ms), fetch (0.087 s), fetch_cpu (1.048 s), submit (6.756 ms).
+2020-06-23 10:56:40.457 root INFO DB Stats: frontier_amount: 1042, url_amount: 5218, avg_freshness: 2020-06-23 10:56:23.233600, visited_ratio: 0.038328861632809505
 2020-06-23 10:56:20.78 root INFO Frontier Stats: 0 FQDNs, 0 URLs
 2020-06-23 10:56:20.184 root INFO Response Stats: 0 FQDNs, 0 URLs
 2020-06-23 10:56:20.192 root INFO Iteration Stats: load (88.091 ms), fetch (0.106 s), fetch_cpu (1.129 s), submit (6.707 ms).
+2020-06-23 10:56:40.457 root INFO DB Stats: frontier_amount: 1042, url_amount: 5218, avg_freshness: 2020-06-23 10:56:23.233600, visited_ratio: 0.038328861632809505
 2020-06-23 10:56:20.228 root INFO Frontier Stats: 0 FQDNs, 0 URLs
 2020-06-23 10:56:20.378 root INFO Response Stats: 0 FQDNs, 0 URLs
 2020-06-23 10:56:20.386 root INFO Iteration Stats: load (36.013 ms), fetch (0.149 s), fetch_cpu (1.215 s), submit (7.14 ms).

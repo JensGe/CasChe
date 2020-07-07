@@ -11,10 +11,11 @@ def delete_example_db():
         websch_database,
         json={
             "delete_url_refs": True,
+            "delete_fetcher_hashes": True,
             "delete_fetchers": True,
             "delete_urls": True,
             "delete_fqdns": True,
-            "delete_reserved_fqdns": True,
+            "delete_reserved_fqdns": True
         },
     )
 

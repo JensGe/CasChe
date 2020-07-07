@@ -5,35 +5,35 @@ from datetime import datetime
 
 
 example_db_settings = dict(
-    fqdn_amount=1000,
-    min_url_amount=1,
-    max_url_amount=1,
-    fixed_crawl_delay=5,
+    fqdn_amount=500,
+    min_url_amount=5,
+    max_url_amount=5,
+    fixed_crawl_delay=10,
 )
 
 project_settings = dict(
-    name="test",
+    name="real_test",
     date=datetime.now().strftime("%Y-%m-%d"),
-    repetition=2,
+    repetition=1,
 )
 
 case_settings = pyd.CaseSettings(
-    logging_mode=[20],
+    logging_mode=[10],
     crawling_speed_factor=[10.0],
-    default_crawl_delay=[5],
-    parallel_process=[12],
-    parallel_fetcher=[2],
-    iterations=[5],
-    fqdn_amount=[1],
-    url_amount=[5],
-    short_term_prio_mode=[enum.SHORTPRIO.random],
-    long_term_prio_mode=[enum.LONGPRIO.random],
-    long_term_part_mode=[enum.LONGPART.none],
-    min_links_per_page=[2],
-    max_links_per_page=[2],
+    default_crawl_delay=[10],
+    parallel_process=[4],
+    parallel_fetcher=[4],
+    iterations=[32],
+    fqdn_amount=[10],
+    url_amount=[0],
+    long_term_part_mode=[enum.LONGPART.fqdn_hash],
+    long_term_prio_mode=[enum.LONGPRIO.old_sites_first],
+    short_term_prio_mode=[enum.SHORTPRIO.old_pages_first],
+    min_links_per_page=[3],
+    max_links_per_page=[3],
     lpp_distribution_type=[enum.PAGELINKDISTR.discrete],
-    internal_vs_external_threshold=[1.0],
-    new_vs_existing_threshold=[1.0],
+    internal_vs_external_threshold=[0.85],
+    new_vs_existing_threshold=[0.15],
 )
 
 
@@ -52,13 +52,19 @@ def main():
     database.backup_table("urls")
 
     for i in range(len(settings_collection)):
+        print("Wait 3 min.")
+        sleep(180)
         print("* Reset Example DB ...")
         websch.delete_example_db()
         database.restore_table("frontiers")
         database.restore_table("urls")
 
         print("* Set Fetcher Settings ...")
-        print("* Case {}".format(settings_collection[i]))
+        print(
+            "* Case {}/{}: {}".format(
+                str(i+1), str(len(settings_collection)), settings_collection[i]
+            )
+        )
         websch.set_fetcher_settings(settings_collection[i])
 
         print("* Create EC2 Instance(s) ...")

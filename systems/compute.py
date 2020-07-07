@@ -3,6 +3,7 @@ import os
 import json
 import csv
 import shutil
+from datetime import datetime
 
 
 def create_cases(case_settings, project_settings):
@@ -40,11 +41,12 @@ def get_iteration_results(row):
 
 
 def get_stats_results(row):
-    data_string = row[row.find("Stats:") + 7:-1]
+    data_string = row[row.find("Stats:") + 7:]
     data_list = data_string.split(", ")
     for i in range(len(data_list)):
         data_list[i] = data_list[i].split(": ")
     data_dict = {k[0]: k[1] for k in data_list}
+    data_dict["access_time"] = row.split(" ")[0] + " " + row.split(" ")[1]
     return data_dict
 
 
@@ -55,6 +57,7 @@ def jsonify_results():
         for file in files:
             iteration_stats = list()
             db_stats = list()
+            mod_date = os.path.getmtime("fetsim-logs/" + file)
             if file.endswith('.log'):
                 with open(subdir + "/" + file, "r") as f:
                     for row in f:
@@ -96,12 +99,14 @@ def write_csv_file():
             "lpp_distribution_type",
             "internal_vs_external_threshold",
             "new_vs_existing_threshold",
-            "long_term_mode",
-            "short_term_mode",
+            "short_term_prio_mode",
+            "long_term_prio_mode",
+            "long_term_part_mode",
             "load",
             "fetch",
             "fetch_cpu",
             "submit",
+            "access_time",
             "frontier_amount",
             "url_amount",
             'avg_freshness',

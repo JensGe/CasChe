@@ -3,7 +3,7 @@ TEST COLLECTION
 
 # Parallel Processes
 ## Metrics
-
+Throughput
 ## Settings
 ```python
 from common import enum
@@ -27,10 +27,10 @@ case_settings = pyd.CaseSettings(
     logging_mode=[20],
     crawling_speed_factor=[10.0],
     default_crawl_delay=[1],
-    parallel_process=[i*2 for i in range(1,16)],
+    parallel_process=[x*2 for x in range(1, 16)],
     parallel_fetcher=[1],
     iterations=[1],
-    fqdn_amount=[i*4 for i in range(1,12)],
+    fqdn_amount=[x*4 for x in range(1, 12)],
     url_amount=[0],
     long_term_part_mode=[enum.LONGPART.none],
     long_term_prio_mode=[enum.LONGPRIO.old_sites_first],
@@ -46,7 +46,7 @@ case_settings = pyd.CaseSettings(
 
 # Parallel Fetcher
 ## Metrics
-
+Throughput
 ## Settings
 ```python
 from common import enum
@@ -113,10 +113,10 @@ case_settings = pyd.CaseSettings(
     logging_mode=[10],
     crawling_speed_factor=[10.0],
     default_crawl_delay=[10],
-    parallel_process=[12],
-    parallel_fetcher=[5],
-    iterations=[10],
-    fqdn_amount=[0],
+    parallel_process=[4],
+    parallel_fetcher=[4],
+    iterations=[32],
+    fqdn_amount=[10],
     url_amount=[0],
     long_term_part_mode=[enum.LONGPART.fqdn_hash],
     long_term_prio_mode=[enum.LONGPRIO.old_sites_first],
@@ -125,13 +125,13 @@ case_settings = pyd.CaseSettings(
     max_links_per_page=[3],
     lpp_distribution_type=[enum.PAGELINKDISTR.discrete],
     internal_vs_external_threshold=[0.85],
-    new_vs_existing_threshold=[0.35],
+    new_vs_existing_threshold=[0.15],
 )
 
 ```
 
 
-# 3. Large Sites vs Small Sites
+# Large Sites vs Small Sites and Pages
 ## Metrics
 
 ## Settings
@@ -172,8 +172,9 @@ case_settings = pyd.CaseSettings(
 )
 ```
 
-# 4. old vs new Sites and Pages
-## Metriken
+
+# Old vs New Sites and Pages
+## Metrics
 
 ## Settings
 ```python
@@ -213,6 +214,47 @@ case_settings = pyd.CaseSettings(
 )
 ```
 
+
 # Partitionierung TLD vs. FQDN Hash vs. CH
 
-Web Crawler Metrik: Durchsatz
+## Metrics
+Durchsatz
+
+## Settings
+```python
+from common import enum
+from common import pyd_models as pyd
+from datetime import datetime
+
+example_db_settings = dict(
+    fqdn_amount=10000,
+    min_url_amount=5,
+    max_url_amount=50,
+    fixed_crawl_delay=5
+)
+
+project_settings = dict(
+    name="tld-fqdnhash-consistent",
+    date=datetime.now().strftime("%Y-%m-%d"),
+    repetition=1,
+)
+
+case_settings = pyd.CaseSettings(
+    logging_mode=[20],
+    crawling_speed_factor=[1.0],
+    default_crawl_delay=[5],
+    parallel_process=[20],
+    parallel_fetcher=[20],
+    iterations=[10],
+    fqdn_amount=[50],
+    url_amount=[0],
+    long_term_part_mode=[enum.LONGPART.none],
+    long_term_prio_mode=[enum.LONGPRIO.old_sites_first, enum.LONGPRIO.new_sites_first, enum.LONGPRIO.random],
+    short_term_prio_mode=[enum.SHORTPRIO.old_pages_first, enum.SHORTPRIO.new_pages_first, enum.SHORTPRIO.random],
+    min_links_per_page=[5],
+    max_links_per_page=[5],
+    lpp_distribution_type=[enum.PAGELINKDISTR.discrete],
+    internal_vs_external_threshold=[1.0],
+    new_vs_existing_threshold=[0.0],
+)
+```

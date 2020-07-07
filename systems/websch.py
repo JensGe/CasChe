@@ -65,7 +65,6 @@ def wait_for_example_db(settings):
         url_reached = example_db["url_amount"] >= url_th
 
         # hash_reached = example_db["fqdn_hash_range"] > 0
-
         # if fqdn_reached and url_reached and hash_reached:
         if fqdn_reached and url_reached:
             print(

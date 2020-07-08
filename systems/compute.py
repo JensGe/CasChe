@@ -46,7 +46,7 @@ def get_stats_results(row):
     for i in range(len(data_list)):
         data_list[i] = data_list[i].split(": ")
     data_dict = {k[0]: k[1] for k in data_list}
-    data_dict["access_time"] = row.split(" ")[0] + " " + row.split(" ")[1]
+    data_dict["db_access_time"] = row.split(" ")[0] + " " + row.split(" ")[1]
     return data_dict
 
 
@@ -106,12 +106,12 @@ def write_csv_file():
             "fetch",
             "fetch_cpu",
             "submit",
-            "access_time",
-            "frontier_amount",
-            "url_amount",
-            'avg_freshness',
-            'visited_ratio',
-            'fqdn_hash_range'
+            "db_access_time",
+            "db_frontier_amount",
+            "db_url_amount",
+            'db_avg_freshness',
+            'db_visited_ratio',
+            'db_fqdn_hash_range'
         ]
 
         writer = csv.DictWriter(csv_file, fieldnames=field_names, delimiter=";")

@@ -6,34 +6,33 @@ from datetime import datetime
 
 example_db_settings = dict(
     fqdn_amount=100,
-    min_url_amount=5,
+    min_url_amount=1,
     max_url_amount=5,
-    fixed_crawl_delay=1,
+    fixed_crawl_delay=5,
 )
 
 project_settings = dict(
-    name="simple_function_test",
+    name="large_vs_small",
     date=datetime.now().strftime("%Y-%m-%d"),
-    repetition=2,
+    repetition=1,
 )
 
 case_settings = pyd.CaseSettings(
     logging_mode=[20],
     crawling_speed_factor=[10.0],
-    default_crawl_delay=[1],
-    parallel_process=[2,4],
-    parallel_fetcher=[2],
-    iterations=[1],
-    fqdn_amount=[10],
+    parallel_process=[1],
+    parallel_fetcher=[1],
+    iterations=[50],
+    fqdn_amount=[1],
     url_amount=[0],
     long_term_part_mode=[enum.LONGPART.none],
-    long_term_prio_mode=[enum.LONGPRIO.old_sites_first],
-    short_term_prio_mode=[enum.SHORTPRIO.old_pages_first],
-    min_links_per_page=[3],
-    max_links_per_page=[3],
+    long_term_prio_mode=[enum.LONGPRIO.large_sites_first, enum.LONGPRIO.small_sites_first, enum.LONGPRIO.random],
+    short_term_prio_mode=[enum.SHORTPRIO.pagerank],
+    min_links_per_page=[1],
+    max_links_per_page=[5],
     lpp_distribution_type=[enum.PAGELINKDISTR.discrete],
-    internal_vs_external_threshold=[0.5],
-    new_vs_existing_threshold=[0.5],
+    internal_vs_external_threshold=[0.0],
+    new_vs_existing_threshold=[0.0],
 )
 
 

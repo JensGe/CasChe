@@ -183,25 +183,26 @@ from common import pyd_models as pyd
 from datetime import datetime
 
 example_db_settings = dict(
-    fqdn_amount=5000,
+    fqdn_amount=500,
     min_url_amount=5,
     max_url_amount=50,
+    fixed_crawl_delay=10,
 )
 
 project_settings = dict(
     name="large_vs_small",
     date=datetime.now().strftime("%Y-%m-%d"),
-    repetition=10,
+    repetition=3,
 )
 
 case_settings = pyd.CaseSettings(
     logging_mode=[20],
-    crawling_speed_factor=[1.0],
+    crawling_speed_factor=[10.0],
     default_crawl_delay=[5],
-    parallel_process=[15], #todo
-    parallel_fetcher=[], #todo
-    iterations=[10],
-    fqdn_amount=[100],
+    parallel_process=[i*4 for i in range(1,8)],
+    parallel_fetcher=[i*4 for i in range(1,8)], 
+    iterations=[4],
+    fqdn_amount=[5], # distribute fqdn to number of fetcher/processes
     url_amount=[0],
     long_term_part_mode=[enum.LONGPART.none],
     long_term_prio_mode=[enum.LONGPRIO.large_sites_first, enum.LONGPRIO.small_sites_first, enum.LONGPRIO.random],

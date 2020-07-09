@@ -15,7 +15,7 @@ def delete_example_db():
             "delete_fetchers": True,
             "delete_urls": True,
             "delete_fqdns": True,
-            "delete_reserved_fqdns": True
+            "delete_reserved_fqdns": True,
         },
     )
 
@@ -60,7 +60,7 @@ def wait_for_example_db(settings):
         url_th = round(
             (settings["min_url_amount"] + settings["max_url_amount"])
             * settings["fqdn_amount"]
-            / 2.15
+            / 2.5
         )
         url_reached = example_db["url_amount"] >= url_th
 
@@ -68,7 +68,7 @@ def wait_for_example_db(settings):
         # if fqdn_reached and url_reached and hash_reached:
         if fqdn_reached and url_reached:
             print(
-                "** Threshold {} reached: url_amount={}, hash_range={}".format(
+                "** url_th {} reached: url_amount={}, hash_range={}".format(
                     url_th, example_db["url_amount"], example_db["fqdn_hash_range"]
                 )
             )
@@ -76,8 +76,11 @@ def wait_for_example_db(settings):
 
         else:
             print(
-                "** Threshold {} not reached: url_amount={}".format(
-                    url_th, example_db["url_amount"]
+                "** Thresholds not reached: fqdn_amount={}/{} url_amount={}/{}".format(
+                    example_db["frontier_amount"],
+                    settings["fqdn_amount"],
+                    example_db["url_amount"],
+                    url_th,
                 )
             )
 

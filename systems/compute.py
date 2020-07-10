@@ -45,7 +45,7 @@ def get_stats_results(row):
     data_list = data_string.split(", ")
     for i in range(len(data_list)):
         data_list[i] = data_list[i].split(": ")
-    data_dict = {k[0]: k[1] for k in data_list}
+    data_dict = {k[0].strip(): k[1].strip() for k in data_list}
     data_dict["db_access_time"] = row.split(" ")[0] + " " + row.split(" ")[1]
     return data_dict
 

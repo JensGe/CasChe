@@ -226,23 +226,23 @@ from common import pyd_models as pyd
 from datetime import datetime
 
 example_db_settings = dict(
-    fqdn_amount=5000,
-    min_url_amount=5,
-    max_url_amount=50,
+    fqdn_amount=1000,
+    min_url_amount=10,
+    max_url_amount=10,
 )
 
 project_settings = dict(
     name="old_vs_new",
     date=datetime.now().strftime("%Y-%m-%d"),
-    repetition=10,
+    repetition=5,
 )
 
 case_settings = pyd.CaseSettings(
     logging_mode=[20],
-    crawling_speed_factor=[1.0],
+    crawling_speed_factor=[10.0],
     default_crawl_delay=[5],
-    parallel_process=[15], #todo
-    parallel_fetcher=[], #todo
+    parallel_process=[1,8,16], #todo
+    parallel_fetcher=[1,8,16], #todo
     iterations=[10],
     fqdn_amount=[100],
     url_amount=[0],

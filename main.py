@@ -18,7 +18,7 @@ project_settings = dict(
 )
 
 case_settings = pyd.CaseSettings(
-    logging_mode=[20],
+    logging_mode=[10],
     crawling_speed_factor=[10.0],
     parallel_process=[1],
     parallel_fetcher=[1],

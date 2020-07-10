@@ -57,7 +57,7 @@ def jsonify_results():
         for file in files:
             iteration_stats = list()
             db_stats = list()
-            mod_date = os.path.getmtime("fetsim-logs/" + file)
+            # mod_date = os.path.getmtime("fetsim-logs/" + file)
             if file.endswith('.log'):
                 with open(subdir + "/" + file, "r") as f:
                     for row in f:

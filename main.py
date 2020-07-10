@@ -5,34 +5,34 @@ from datetime import datetime
 
 
 example_db_settings = dict(
-    fqdn_amount=100,
-    min_url_amount=1,
+    fqdn_amount=1000,
+    min_url_amount=5,
     max_url_amount=5,
-    fixed_crawl_delay=5,
 )
 
 project_settings = dict(
-    name="large_vs_small",
+    name="old_vs_new",
     date=datetime.now().strftime("%Y-%m-%d"),
-    repetition=1,
+    repetition=3,
 )
 
 case_settings = pyd.CaseSettings(
     logging_mode=[10],
-    crawling_speed_factor=[10.0],
-    parallel_process=[1],
+    crawling_speed_factor=[5.0],
+    default_crawl_delay=[5],
+    parallel_process=[10],
     parallel_fetcher=[1],
-    iterations=[50],
-    fqdn_amount=[1],
+    iterations=[10],
+    fqdn_amount=[10],
     url_amount=[0],
     long_term_part_mode=[enum.LONGPART.none],
-    long_term_prio_mode=[enum.LONGPRIO.large_sites_first, enum.LONGPRIO.small_sites_first, enum.LONGPRIO.random],
+    long_term_prio_mode=[enum.LONGPRIO.old_sites_first, enum.LONGPRIO.new_sites_first],
     short_term_prio_mode=[enum.SHORTPRIO.pagerank],
-    min_links_per_page=[1],
-    max_links_per_page=[5],
+    min_links_per_page=[2],
+    max_links_per_page=[2],
     lpp_distribution_type=[enum.PAGELINKDISTR.discrete],
-    internal_vs_external_threshold=[0.0],
-    new_vs_existing_threshold=[0.0],
+    internal_vs_external_threshold=[0.85],
+    new_vs_existing_threshold=[0.95],
 )
 
 
@@ -51,8 +51,9 @@ def main():
     database.backup_table("urls")
 
     for i in range(len(settings_collection)):
-        print("Wait 3 min.")
-        sleep(180)
+        if settings_collection[i]["parallel_fetcher"] > 20:
+            print("More then 20 Fetchers, wait 3 min. to get them terminated completely")
+            sleep(180)
         print("* Reset Example DB ...")
         websch.delete_example_db()
         database.restore_table("frontiers")

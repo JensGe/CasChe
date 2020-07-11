@@ -3,7 +3,6 @@ import os
 import json
 import csv
 import shutil
-from datetime import datetime
 
 
 def create_cases(case_settings, project_settings):
@@ -57,7 +56,6 @@ def jsonify_results():
         for file in files:
             iteration_stats = list()
             db_stats = list()
-            # mod_date = os.path.getmtime("fetsim-logs/" + file)
             if file.endswith('.log'):
                 with open(subdir + "/" + file, "r") as f:
                     for row in f:

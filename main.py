@@ -5,34 +5,37 @@ from datetime import datetime
 
 
 example_db_settings = dict(
-    fqdn_amount=1000,
-    min_url_amount=5,
-    max_url_amount=5,
+    fqdn_amount=80, min_url_amount=5, max_url_amount=5, fixed_crawl_delay=10,
 )
 
 project_settings = dict(
-    name="old_vs_new",
+    name="tld-fqdnhash-consistent",
     date=datetime.now().strftime("%Y-%m-%d"),
-    repetition=3,
+    repetition=1,
 )
 
 case_settings = pyd.CaseSettings(
-    logging_mode=[10],
-    crawling_speed_factor=[5.0],
-    default_crawl_delay=[5],
-    parallel_process=[10],
-    parallel_fetcher=[1],
-    iterations=[10],
-    fqdn_amount=[10],
+    logging_mode=[20],
+    crawling_speed_factor=[1.0],
+    default_crawl_delay=[10],
+    parallel_process=[4],
+    parallel_fetcher=[4],
+    iterations=[1],
+    fqdn_amount=[5],
     url_amount=[0],
-    long_term_part_mode=[enum.LONGPART.none],
-    long_term_prio_mode=[enum.LONGPRIO.old_sites_first, enum.LONGPRIO.new_sites_first],
-    short_term_prio_mode=[enum.SHORTPRIO.pagerank],
-    min_links_per_page=[2],
-    max_links_per_page=[2],
+    long_term_part_mode=[
+        enum.LONGPART.none,
+        enum.LONGPART.top_level_domain,
+        enum.LONGPART.fqdn_hash,
+        enum.LONGPART.consistent_hashing,
+    ],
+    long_term_prio_mode=[enum.LONGPRIO.old_sites_first],
+    short_term_prio_mode=[enum.SHORTPRIO.old_pages_first],
+    min_links_per_page=[5],
+    max_links_per_page=[5],
     lpp_distribution_type=[enum.PAGELINKDISTR.discrete],
-    internal_vs_external_threshold=[0.85],
-    new_vs_existing_threshold=[0.95],
+    internal_vs_external_threshold=[0.0],
+    new_vs_existing_threshold=[1.0],
 )
 
 
@@ -52,7 +55,9 @@ def main():
 
     for i in range(len(settings_collection)):
         if settings_collection[i]["parallel_fetcher"] > 20:
-            print("More then 20 Fetchers, wait 3 min. to get them terminated completely")
+            print(
+                "More then 20 Fetchers, wait 3 min. to let them get terminated completely"
+            )
             sleep(180)
         print("* Reset Example DB ...")
         websch.delete_example_db()
@@ -62,7 +67,7 @@ def main():
         print("* Set Fetcher Settings ...")
         print(
             "* Case {}/{}: {}".format(
-                str(i+1), str(len(settings_collection)), settings_collection[i]
+                str(i + 1), str(len(settings_collection)), settings_collection[i]
             )
         )
         websch.set_fetcher_settings(settings_collection[i])

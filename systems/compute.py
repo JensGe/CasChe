@@ -14,7 +14,9 @@ def create_cases(case_settings, project_settings):
 
     settings_collection = []
     for element in dict_product(case_settings_dict):
-        settings_collection.extend(element for _ in range(project_settings["repetition"]))
+        settings_collection.extend(
+            element for _ in range(project_settings["repetition"])
+        )
 
     return settings_collection
 
@@ -31,7 +33,7 @@ def get_fetcher_settings(row):
 
 
 def get_stats_results(row):
-    data_string = row[row.find("Stats:") + 7:]
+    data_string = row[row.find("Stats:") + 7 :]
     data_list = data_string.split(", ")
     for i in range(len(data_list)):
         data_list[i] = data_list[i].split(": ")
@@ -41,7 +43,9 @@ def get_stats_results(row):
 
 def get_db_stats_results(row):
     data_dict = get_stats_results(row)
-    data_dict["db_access_time"] = row.split(" ")[0] + " " + row.split(" ")[1]
+    data_dict["db_access_time"] = (
+        row.split(" ")[0] + " " + row.split(" ")[1].replace(",", ".") + "000"
+    )
     return data_dict
 
 
@@ -52,7 +56,7 @@ def jsonify_results():
         for file in files:
             iteration_stats = list()
             db_stats = list()
-            if file.endswith('.log'):
+            if file.endswith(".log"):
                 with open(subdir + "/" + file, "r") as f:
                     for row in f:
                         if "Fetcher Settings" in row:
@@ -104,11 +108,10 @@ def write_csv_file():
             "db_access_time",
             "db_frontier_amount",
             "db_url_amount",
-            'db_avg_freshness',
-            'db_visited_ratio',
-            'db_fqdn_hash_range'
+            "db_avg_freshness",
+            "db_visited_ratio",
+            "db_fqdn_hash_range",
         ]
-
 
         writer = csv.DictWriter(csv_file, fieldnames=field_names, delimiter=";")
         writer.writeheader()
@@ -131,6 +134,3 @@ def archive_project(settings):
 
     shutil.make_archive("finished_results/{}".format(filename), "zip", "fetsim-logs")
     shutil.rmtree("fetsim-logs")
-
-
-

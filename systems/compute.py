@@ -30,21 +30,17 @@ def get_fetcher_settings(row):
     return fetcher_settings
 
 
-def get_iteration_results(row):
-    data_string = row[row.find("Stats:") + 7 : -2].replace("(", "").replace(")", "")
-    data_list = data_string.split(", ")
-    for i in range(len(data_list)):
-        data_list[i] = data_list[i].split(" ")
-    data_dict = {k[0]: k[1] + " " + k[2] for k in data_list}
-    return data_dict
-
-
 def get_stats_results(row):
     data_string = row[row.find("Stats:") + 7:]
     data_list = data_string.split(", ")
     for i in range(len(data_list)):
         data_list[i] = data_list[i].split(": ")
     data_dict = {k[0].strip(): k[1].strip() for k in data_list}
+    return data_dict
+
+
+def get_db_stats_results(row):
+    data_dict = get_stats_results(row)
     data_dict["db_access_time"] = row.split(" ")[0] + " " + row.split(" ")[1]
     return data_dict
 
@@ -62,9 +58,9 @@ def jsonify_results():
                         if "Fetcher Settings" in row:
                             fetcher_settings = get_fetcher_settings(row)
                         if "Iteration Stats" in row:
-                            iteration_stats.append(get_iteration_results(row))
+                            iteration_stats.append(get_stats_results(row))
                         if "DB Stats" in row:
-                            db_stats.append(get_stats_results(row))
+                            db_stats.append(get_db_stats_results(row))
                 for i in range(len(iteration_stats)):
                     results.append(
                         dict(
@@ -100,10 +96,11 @@ def write_csv_file():
             "short_term_prio_mode",
             "long_term_prio_mode",
             "long_term_part_mode",
-            "load",
-            "fetch",
-            "fetch_cpu",
-            "submit",
+            "iter_load_duration",
+            "iter_fetch_start",
+            "iter_fetch_duration",
+            "iter_fetch_cpu_time",
+            "iter_submit_duration",
             "db_access_time",
             "db_frontier_amount",
             "db_url_amount",
@@ -111,6 +108,7 @@ def write_csv_file():
             'db_visited_ratio',
             'db_fqdn_hash_range'
         ]
+
 
         writer = csv.DictWriter(csv_file, fieldnames=field_names, delimiter=";")
         writer.writeheader()

@@ -114,8 +114,8 @@ def test_get_iteration_results():
     row_1 = "2020-05-22 00:14:28.190 root INFO Iteration Stats: load (59.47 ms), fetch (22.58 s), fetch_cpu (0.757 s), submit (18.185 ms)."
     row_2 = "2020-05-22 00:14:28.19 root INFO Iteration Stats: load (59.47 ms), fetch (22.58 s), fetch_cpu (0.757 s), submit (18.185 ms)."
 
-    iteration_results1 = compute.get_iteration_results(row_1)
-    iteration_results2 = compute.get_iteration_results(row_2)
+    iteration_results1 = compute.get_stats_results(row_1)
+    iteration_results2 = compute.get_stats_results(row_2)
 
     asserted_results = dict(
         load="59.47 ms", fetch="22.58 s", fetch_cpu="0.757 s", submit="18.185 ms",
@@ -125,10 +125,10 @@ def test_get_iteration_results():
     assert iteration_results2 == asserted_results
 
 
-def test_get_stats_results():
+def test_get_stats_results_db():
     row = "2020-05-22 00:14:28.19 root INFO DB Stats: db_frontier_amount: 1005, db_url_amount: 5230\n"
 
-    stats_results = compute.get_stats_results(row)
+    stats_results = compute.get_db_stats_results(row)
 
     asserted_results = dict(
         db_access_time="2020-05-22 00:14:28.19",
@@ -138,6 +138,21 @@ def test_get_stats_results():
 
     assert stats_results == asserted_results
 
+
+def test_get_stats_results_iter():
+    row = "2020-07-11 19:40:39,001 FETSIM INFO Iteration Stats: iter_load_duration: 72.304, iter_fetch_start: 2020-07-11 19:40:37.437, iter_fetch_duration: 1.023, iter_fetch_cpu_time: 0.369, iter_submit_duration: 35.696\n"
+
+    stats_results = compute.get_db_stats_results(row)
+
+    asserted_results = dict(
+        iter_load_duration="72.304",
+        iter_fetch_start="2020-07-11 19:40:37.437",
+        iter_fetch_duration="1.023",
+        iter_fetch_cpu_time="0.369",
+        iter_submit_duration="35.696",
+    )
+
+    assert stats_results == asserted_results
 
 def test_archive_project():
     if not os.path.exists("fetsim-logs"):
@@ -165,31 +180,17 @@ def test_multiple_iteration_results():
     with open("fetsim-logs/file1.log", "w") as file1:
         file1.write(
             """
-2020-06-23 10:56:19.585 root INFO Fetcher Settings: {'logging_mode': 20, 'crawling_speed_factor': 10.0, 'default_crawl_delay': 10, 'parallel_process': 12, 'parallel_fetcher': 5, 'iterations': 5, 'fqdn_amount': 10, 'url_amount': 0, 'long_term_mode': 'fqdn_hash', 'short_term_mode': 'old_pages_first', 'min_links_per_page': 3, 'max_links_per_page': 3, 'lpp_distribution_type': 'discrete', 'internal_vs_external_threshold': 0.85, 'new_vs_existing_threshold': 0.35}
-2020-06-23 10:56:19.623 root INFO Frontier Stats: 0 FQDNs, 0 URLs
-2020-06-23 10:56:19.717 root INFO Response Stats: 0 FQDNs, 0 URLs
-2020-06-23 10:56:19.725 root INFO Iteration Stats: load (38.244 ms), fetch (0.093 s), fetch_cpu (0.897 s), submit (8.064 ms).
-2020-06-23 10:56:40.457 root INFO DB Stats: frontier_amount: 1042, url_amount: 5218, avg_freshness: 2020-06-23 10:56:23.233600, visited_ratio: 0.038328861632809505
-2020-06-23 10:56:19.758 root INFO Frontier Stats: 0 FQDNs, 0 URLs
-2020-06-23 10:56:19.853 root INFO Response Stats: 0 FQDNs, 0 URLs
-2020-06-23 10:56:19.861 root INFO Iteration Stats: load (32.092 ms), fetch (0.095 s), fetch_cpu (0.968 s), submit (7.377 ms).
-2020-06-23 10:56:40.457 root INFO DB Stats: frontier_amount: 1042, url_amount: 5218, avg_freshness: 2020-06-23 10:56:23.233600, visited_ratio: 0.038328861632809505
-2020-06-23 10:56:19.895 root INFO Frontier Stats: 0 FQDNs, 0 URLs
-2020-06-23 10:56:19.983 root INFO Response Stats: 0 FQDNs, 0 URLs
-2020-06-23 10:56:19.990 root INFO Iteration Stats: load (33.396 ms), fetch (0.087 s), fetch_cpu (1.048 s), submit (6.756 ms).
-2020-06-23 10:56:40.457 root INFO DB Stats: frontier_amount: 1042, url_amount: 5218, avg_freshness: 2020-06-23 10:56:23.233600, visited_ratio: 0.038328861632809505
-2020-06-23 10:56:20.78 root INFO Frontier Stats: 0 FQDNs, 0 URLs
-2020-06-23 10:56:20.184 root INFO Response Stats: 0 FQDNs, 0 URLs
-2020-06-23 10:56:20.192 root INFO Iteration Stats: load (88.091 ms), fetch (0.106 s), fetch_cpu (1.129 s), submit (6.707 ms).
-2020-06-23 10:56:40.457 root INFO DB Stats: frontier_amount: 1042, url_amount: 5218, avg_freshness: 2020-06-23 10:56:23.233600, visited_ratio: 0.038328861632809505
-2020-06-23 10:56:20.228 root INFO Frontier Stats: 0 FQDNs, 0 URLs
-2020-06-23 10:56:20.378 root INFO Response Stats: 0 FQDNs, 0 URLs
-2020-06-23 10:56:20.386 root INFO Iteration Stats: load (36.013 ms), fetch (0.149 s), fetch_cpu (1.215 s), submit (7.14 ms).
-2020-06-23 10:56:40.457 root INFO DB Stats: frontier_amount: 1042, url_amount: 5218, avg_freshness: 2020-06-23 10:56:23.233600, visited_ratio: 0.038328861632809505
-2020-06-23 10:56:40.685 root INFO Upload: i-0484db4715db2d984.log
+2020-07-11 19:40:37,869 FETSIM INFO Fetcher Settings: {'logging_mode': 20, 'crawling_speed_factor': 10.0, 'default_crawl_delay': 10, 'parallel_process': 1, 'parallel_fetcher': 1, 'iterations': 1, 'fqdn_amount': 1, 'url_amount': 0, 'short_term_prio_mode': 'random', 'long_term_prio_mode': 'random', 'long_term_part_mode': 'none', 'min_links_per_page': 1, 'max_links_per_page': 1, 'lpp_distribution_type': 'discrete', 'internal_vs_external_threshold': 1.0, 'new_vs_existing_threshold': 1.0}
+2020-07-11 19:40:37,942 FETSIM INFO Frontier Stats: 1 FQDNs, 1 URLs
+2020-07-11 19:40:38,961 FETSIM INFO Short Term Frontier processed. FQDN www.s1umjmr3mogop.za, URLs 1
+2020-07-11 19:40:38,965 FETSIM INFO Response Stats: 1 FQDNs, 2 URLs
+2020-07-11 19:40:39,001 FETSIM INFO Iteration Stats: iter_load_duration: 72.304, iter_fetch_start: 2020-07-11 19:40:37.437, iter_fetch_duration: 1.023, iter_fetch_cpu_time: 0.369, iter_submit_duration: 35.696.
+2020-07-11 19:40:44,096 FETSIM INFO DB Stats: db_frontier_amount: 600, db_url_amount: 802, db_avg_freshness: 2017-08-16 19:58:14.213443, db_visited_ratio: 0.19201995012468828, db_fqdn_hash_range: 0.34
+2020-07-11 19:40:44,148 FETSIM INFO uploading...
+2020-07-11 19:40:44,467 FETSIM INFO Terminating Program
         """
         )
 
     results = compute.jsonify_results()
     print(results)
-    assert len(results) == 5
+    assert len(results) == 1

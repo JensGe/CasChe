@@ -10,7 +10,7 @@ logs_folder = "fetsim-logs"
 
 def create_instance(settings):
     response = ec2.run_instances(
-        LaunchTemplate={"LaunchTemplateId": "lt-0344130210c1eaca5", "Version": "8"},
+        LaunchTemplate={"LaunchTemplateId": "lt-0344130210c1eaca5", "Version": "9"},
         MinCount=settings["parallel_fetcher"],
         MaxCount=settings["parallel_fetcher"],
     )

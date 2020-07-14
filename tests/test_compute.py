@@ -111,17 +111,21 @@ def test_get_fetcher_settings():
 
 
 def test_get_iteration_results():
-    row_1 = "2020-05-22 00:14:28.190 root INFO Iteration Stats: load (59.47 ms), fetch (22.58 s), fetch_cpu (0.757 s), submit (18.185 ms)."
-    row_2 = "2020-05-22 00:14:28.19 root INFO Iteration Stats: load (59.47 ms), fetch (22.58 s), fetch_cpu (0.757 s), submit (18.185 ms)."
+    # row_1 = "2020-05-22 00:14:28.190 root INFO Iteration Stats: load (59.47 ms), fetch (22.58 s), fetch_cpu (0.757 s), submit (18.185 ms)."
+    row_2 = "2020-07-12 10:10:01,587 FETSIM INFO Iteration Stats: iter_load_duration: 0.047 s, iter_fetch_start: 2020-07-12 10:10:00.557000, iter_fetch_duration: 1.003 s, iter_fetch_cpu_time: 0.079 s, iter_submit_duration: 0.027 s"
 
-    iteration_results1 = compute.get_stats_results(row_1)
+    # iteration_results1 = compute.get_stats_results(row_1)
     iteration_results2 = compute.get_stats_results(row_2)
 
     asserted_results = dict(
-        load="59.47 ms", fetch="22.58 s", fetch_cpu="0.757 s", submit="18.185 ms",
+        iter_load_duration="0.047 s",
+        iter_fetch_start="2020-07-12 10:10:00.557000",
+        iter_fetch_duration="1.003 s",
+        iter_fetch_cpu_time="0.079 s",
+        iter_submit_duration="0.027 s",
     )
 
-    assert iteration_results1 == asserted_results
+    # assert iteration_results1 == asserted_results
     assert iteration_results2 == asserted_results
 
 

@@ -33,7 +33,7 @@ def get_fetcher_settings(row):
 
 
 def get_stats_results(row):
-    data_string = row[row.find("Stats:") + 7 :]
+    data_string = row[row.find("Stats:") + 7:]
     data_list = data_string.split(", ")
     for i in range(len(data_list)):
         data_list[i] = data_list[i].split(": ")
@@ -58,6 +58,7 @@ def jsonify_results():
             db_stats = list()
             if file.endswith(".log"):
                 with open(subdir + "/" + file, "r") as f:
+                    print(file)
                     for row in f:
                         if "Fetcher Settings" in row:
                             fetcher_settings = get_fetcher_settings(row)

@@ -37,7 +37,7 @@ case_settings = pyd.CaseSettings(
     min_links_per_page=[5],
     max_links_per_page=[5],
     lpp_distribution_type=[enum.PAGELINKDISTR.discrete],
-    internal_vs_external_threshold=[0.0],
+    internal_vs_external_threshold=[1.0],
     new_vs_existing_threshold=[1.0],
 )
 
@@ -49,6 +49,7 @@ def main():
 
     print("Reset Example DB ...")
     websch.delete_example_db()
+    sleep(10)
     websch.generate_example_db(**example_db_settings)
     websch.wait_for_example_db(example_db_settings)
 
@@ -57,6 +58,8 @@ def main():
     database.backup_table("urls")
 
     for i in range(len(settings_collection)):
+
+        sleep(300)
         if settings_collection[i]["parallel_fetcher"] > 20:
             print(
                 "More then 20 Fetchers, wait 3 min. to let old fetcher get terminated."
@@ -64,6 +67,7 @@ def main():
             sleep(180)
         print("* Reset Example DB ...")
         websch.delete_example_db()
+        sleep(10)
         database.restore_table("frontiers")
         database.restore_table("urls")
 

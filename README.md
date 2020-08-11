@@ -1,4 +1,4 @@
-# owi Test Executer
+# owi Test Executor
 
 ## Settings
 
